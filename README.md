@@ -50,7 +50,7 @@ The output of step 3 above should be a set of FASTQ files (single or pairs).
 Now, we must use these files to align them to a reference genome. For the 
 particular dataset we are examining, this is the GRCh37 human genome version. 
 We will use the HISAT2 splice-aware aligner and the indexes recommended in the
-HISAST2 [website](https://ccb.jhu.edu/software/hisat2/manual.shtm). A first
+HISAT2 [website](https://ccb.jhu.edu/software/hisat2/manual.shtm). A first
 reference and index for the above dataset is located at ```$WORK/reference```.
 Apart from the reference genome, for RNA-Seq we must have a set of known splice
 sites which can guide HISAT2 for the provision of better results. A template for
@@ -271,7 +271,7 @@ b2c.out <- list(
     length=gene.length
 )
 save(b2c.out,file=file.path(work,"datasets","GSE79183","metaseqR_out",
-    "GSE79183.rda")
+    "GSE79183.rda"))
 ```
 
 ## Directory structure to host BAM and signal files
