@@ -276,7 +276,90 @@ save(b2c.out,file=file.path(work,"datasets","GSE79183","metaseqR_out",
 
 ## Directory structure to host BAM and signal files
 
-_TBD_
+The directory structure to host BAM and signal (BigWig) as well as normalization factors and potentially the ```.rda``` files will be as follows, stored in a directory served by the web server (e.g. Apache or nginx).
+
+```
+seqcvibe
+  dataset_1
+    dataset_1_normfactors.txt
+    condition_1
+	  bam_11
+	  bam.bai_11
+	  bigwig_11
+	  bam_12
+	  bam.bai_12
+	  bigwig_12
+	  ...
+	condition_2
+	  bam_21
+	  bam.bai_21
+	  bigwig_21
+	  bam_22
+	  bam.bai_22
+	  bigwig_22
+	...
+	condition_n
+	  bam_n1
+	  bam.bai_n1
+	  bigwig_n1
+	  bam_n2
+	  bam.bai_n2
+	  bigwig_n2
+	  ...
+  dataset_2
+    dataset_2_normfactors.txt
+    condition_1
+	  bam_11
+	  bam.bai_11
+	  bigwig_11
+	  bam_12
+	  bam.bai_12
+	  bigwig_12
+	  ...
+	condition_2
+	  bam_21
+	  bam.bai_21
+	  bigwig_21
+	  bam_22
+	  bam.bai_22
+	  bigwig_22
+	...
+	condition_n
+	  bam_n1
+	  bam.bai_n1
+	  bigwig_n1
+	  bam_n2
+	  bam.bai_n2
+	  bigwig_n2
+	  ...
+  ...
+  dataset_m
+    dataset_m_normfactors.txt
+    condition_1
+	  bam_11
+	  bam.bai_11
+	  bigwig_11
+	  bam_12
+	  bam.bai_12
+	  bigwig_12
+	  ...
+	condition_2
+	  bam_21
+	  bam.bai_21
+	  bigwig_21
+	  bam_22
+	  bam.bai_22
+	  bigwig_22
+	...
+	condition_n
+	  bam_n1
+	  bam.bai_n1
+	  bigwig_n1
+	  bam_n2
+	  bam.bai_n2
+	  bigwig_n2
+	  ...
+```
 
 ### TODO
 
