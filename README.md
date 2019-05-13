@@ -334,102 +334,102 @@ seqcvibe
     dataset_1_normfactors.txt
     dataset_1.rda
     condition_1
-	  sample_11.bam
+      sample_11.bam
       sample_11.bam.bai
-	  sample_11.bigWig
+      sample_11.bigWig
       sample_11.fastqc
-	  sample_12.bam
+      sample_12.bam
       sample_12.bam.bai
-	  sample_12.bigWig
+      sample_12.bigWig
       sample_12.fastqc
-	  ...
-	condition_2
-	  sample_21.bam
+      ...
+    condition_2
+      sample_21.bam
       sample_21.bam.bai
-	  sample_21.bigWig
+      sample_21.bigWig
       sample_21.fastqc
-	  sample_22.bam
+      sample_22.bam
       sample_22.bam.bai
-	  sample_22.bigWig
+      sample_22.bigWig
       sample_22.fastqc
-	...
-	condition_n
-	  sample_n1.bam
+      ...
+    condition_n
+      sample_n1.bam
       sample_n1.bam.bai
-	  sample_n1.bigWig
+      sample_n1.bigWig
       sample_n1.fastqc
-	  sample_n2.bam
+      sample_n2.bam
       sample_n2.bam.bai
-	  sample_n2.bigWig
+      sample_n2.bigWig
       sample_n2.fastqc
-	  ...
-  dataset_1
+      ...
+  dataset_2
     dataset_2_normfactors.txt
     dataset_2.rda
     condition_1
-	  sample_11.bam
+      sample_11.bam
       sample_11.bam.bai
-	  sample_11.bigWig
+      sample_11.bigWig
       sample_11.fastqc
-	  sample_12.bam
+      sample_12.bam
       sample_12.bam.bai
-	  sample_12.bigWig
+      sample_12.bigWig
       sample_12.fastqc
-	  ...
-	condition_2
-	  sample_21.bam
+      ...
+    condition_2
+      sample_21.bam
       sample_21.bam.bai
-	  sample_21.bigWig
+      sample_21.bigWig
       sample_21.fastqc
-	  sample_22.bam
+      sample_22.bam
       sample_22.bam.bai
-	  sample_22.bigWig
+      sample_22.bigWig
       sample_22.fastqc
-	...
-	condition_n
-	  sample_n1.bam
+      ...
+    condition_n
+      sample_n1.bam
       sample_n1.bam.bai
-	  sample_n1.bigWig
+      sample_n1.bigWig
       sample_n1.fastqc
-	  sample_n2.bam
+      sample_n2.bam
       sample_n2.bam.bai
-	  sample_n2.bigWig
+      sample_n2.bigWig
       sample_n2.fastqc
-	  ...
+      ...
   ...
   dataset_m
     dataset_m_normfactors.txt
     dataset_m.rda
     condition_1
-	  sample_11.bam
+      sample_11.bam
       sample_11.bam.bai
-	  sample_11.bigWig
+      sample_11.bigWig
       sample_11.fastqc
-	  sample_12.bam
+      sample_12.bam
       sample_12.bam.bai
-	  sample_12.bigWig
+      sample_12.bigWig
       sample_12.fastqc
-	  ...
-	condition_2
-	  sample_21.bam
+      ...
+    condition_2
+      sample_21.bam
       sample_21.bam.bai
-	  sample_21.bigWig
+      sample_21.bigWig
       sample_21.fastqc
-	  sample_22.bam
+      sample_22.bam
       sample_22.bam.bai
-	  sample_22.bigWig
+      sample_22.bigWig
       sample_22.fastqc
-	...
-	condition_n
-	  sample_n1.bam
+      ...
+    condition_n
+      sample_n1.bam
       sample_n1.bam.bai
-	  sample_n1.bigWig
+      sample_n1.bigWig
       sample_n1.fastqc
-	  sample_n2.bam
+      sample_n2.bam
       sample_n2.bam.bai
-	  sample_n2.bigWig
+      sample_n2.bigWig
       sample_n2.fastqc
-	  ...
+      ...
 ```
 
 ## Script and operation log
