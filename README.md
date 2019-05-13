@@ -20,9 +20,9 @@
    to be downloaded and the various formats.
 
 ```
-$ mkdir -p $WORK/datasets/GSE79183/fastq
-$ mkdir -p $WORK/datasets/GSE79183/hisat2_out
-$ mkdir -p $WORK/datasets/GSE79183/metaseqR_out
+mkdir -p $WORK/datasets/GSE79183/fastq
+mkdir -p $WORK/datasets/GSE79183/hisat2_out
+mkdir -p $WORK/datasets/GSE79183/metaseqR_out
 # ...
 ```
 
@@ -44,7 +44,57 @@ do
 done
 ```
 
+## Quality control with FastQC
+
+We need to run this for 3 main purposes:
+1. If a dataset is really bad, we should exclude it and find other(s)
+2. Trimming may be needed prior to alignment
+3. We need to save the FastQC report (fastqc_data.txt file) because the stats 
+are going to be used (along with HISAT2 stats) to produce 
+[MultiQC](https://multiqc.info/) from within SeqCVIBE.
+
+```
+THREADS=8
+CURDIR=`pwd`
+mkdir -p $WORK/datasets/GSE79183/fastqc
+cd $WORK/datasets/GSE79183/fastq
+$WORK/tools/fasqtc-0.11.8/fastqc \
+    --outdir $WORK/datasets/GSE79183/fastqc *.fastq
+cd $CURDIR
+```
+
+The ```fastqc_data.txt``` file located inside the zip archive created by FastQC
+will need to be collected and placed in the final directory structure where
+SeqCVIBE will look. The name of the QC file must be the sample name and its
+extension, the name of the tool used, e.g. ```SRR3224187.fastqc```.
+
+## Trimming (optional)
+
+In case of unacceptably bad FASTQ files (should not happen very frequently),
+some trimming must be performed. [seqtk](https://github.com/lh3/seqtk) is fast
+and easy. So let's suppose that we need to trim 10bp from the left part of each
+read, and 5bp from the right part:
+
+```
+mkdir -p $WORK/datasets/GSE79183/fastq_trim
+for FILE in $WORK/datasets/GSE79183/fastq/*.fastq.gz
+do
+	SAMPLE=`basename $FILE`
+	$WORK/tools/seqtk-1.3/seqtk trimfq -b 10 -e 5 $FILE > \
+        $WORK/datasets/GSE79183/fastq_trim/$SAMPLE &
+done
+```
+
+Generally, only one of ```$WORK/datasets/GSE79183/fastq``` and 
+```$WORK/datasets/GSE79183/fastq_trim``` should be kept even before pilot data
+analysis completion to avoid collecting garbage. Suggested strategy is to keep
+the QC data from untrimmed FASTQs and use the trimmed FASTQs for alignment.
+
 ## Alignment to the reference genome
+
+**For this tutorial it would be useful to run on a test subset of the above,
+e.g. for the first 200000 reads from each sample, see the existing *_test
+directories**
 
 The output of step 3 above should be a set of FASTQ files (single or pairs). 
 Now, we must use these files to align them to a reference genome. For the 
@@ -282,89 +332,114 @@ The directory structure to host BAM and signal (BigWig) as well as normalization
 seqcvibe
   dataset_1
     dataset_1_normfactors.txt
+    dataset_1.rda
     condition_1
-	  bam_11
-	  bam.bai_11
-	  bigwig_11
-	  bam_12
-	  bam.bai_12
-	  bigwig_12
+	  sample_11.bam
+      sample_11.bam.bai
+	  sample_11.bigWig
+      sample_11.fastqc
+	  sample_12.bam
+      sample_12.bam.bai
+	  sample_12.bigWig
+      sample_12.fastqc
 	  ...
 	condition_2
-	  bam_21
-	  bam.bai_21
-	  bigwig_21
-	  bam_22
-	  bam.bai_22
-	  bigwig_22
+	  sample_21.bam
+      sample_21.bam.bai
+	  sample_21.bigWig
+      sample_21.fastqc
+	  sample_22.bam
+      sample_22.bam.bai
+	  sample_22.bigWig
+      sample_22.fastqc
 	...
 	condition_n
-	  bam_n1
-	  bam.bai_n1
-	  bigwig_n1
-	  bam_n2
-	  bam.bai_n2
-	  bigwig_n2
+	  sample_n1.bam
+      sample_n1.bam.bai
+	  sample_n1.bigWig
+      sample_n1.fastqc
+	  sample_n2.bam
+      sample_n2.bam.bai
+	  sample_n2.bigWig
+      sample_n2.fastqc
 	  ...
-  dataset_2
+  dataset_1
     dataset_2_normfactors.txt
+    dataset_2.rda
     condition_1
-	  bam_11
-	  bam.bai_11
-	  bigwig_11
-	  bam_12
-	  bam.bai_12
-	  bigwig_12
+	  sample_11.bam
+      sample_11.bam.bai
+	  sample_11.bigWig
+      sample_11.fastqc
+	  sample_12.bam
+      sample_12.bam.bai
+	  sample_12.bigWig
+      sample_12.fastqc
 	  ...
 	condition_2
-	  bam_21
-	  bam.bai_21
-	  bigwig_21
-	  bam_22
-	  bam.bai_22
-	  bigwig_22
+	  sample_21.bam
+      sample_21.bam.bai
+	  sample_21.bigWig
+      sample_21.fastqc
+	  sample_22.bam
+      sample_22.bam.bai
+	  sample_22.bigWig
+      sample_22.fastqc
 	...
 	condition_n
-	  bam_n1
-	  bam.bai_n1
-	  bigwig_n1
-	  bam_n2
-	  bam.bai_n2
-	  bigwig_n2
+	  sample_n1.bam
+      sample_n1.bam.bai
+	  sample_n1.bigWig
+      sample_n1.fastqc
+	  sample_n2.bam
+      sample_n2.bam.bai
+	  sample_n2.bigWig
+      sample_n2.fastqc
 	  ...
   ...
   dataset_m
     dataset_m_normfactors.txt
+    dataset_m.rda
     condition_1
-	  bam_11
-	  bam.bai_11
-	  bigwig_11
-	  bam_12
-	  bam.bai_12
-	  bigwig_12
+	  sample_11.bam
+      sample_11.bam.bai
+	  sample_11.bigWig
+      sample_11.fastqc
+	  sample_12.bam
+      sample_12.bam.bai
+	  sample_12.bigWig
+      sample_12.fastqc
 	  ...
 	condition_2
-	  bam_21
-	  bam.bai_21
-	  bigwig_21
-	  bam_22
-	  bam.bai_22
-	  bigwig_22
+	  sample_21.bam
+      sample_21.bam.bai
+	  sample_21.bigWig
+      sample_21.fastqc
+	  sample_22.bam
+      sample_22.bam.bai
+	  sample_22.bigWig
+      sample_22.fastqc
 	...
 	condition_n
-	  bam_n1
-	  bam.bai_n1
-	  bigwig_n1
-	  bam_n2
-	  bam.bai_n2
-	  bigwig_n2
+	  sample_n1.bam
+      sample_n1.bam.bai
+	  sample_n1.bigWig
+      sample_n1.fastqc
+	  sample_n2.bam
+      sample_n2.bam.bai
+	  sample_n2.bigWig
+      sample_n2.fastqc
 	  ...
 ```
+
+## Script and operation log
+
+**IMPORTANT** All scripts (normally based on this guide and repository) should be placed
+under ```$WORK/datasets/DATASET_ACCESSION/scripts``` along with any logs
+regarding sequential shell command executions.
 
 ### TODO
 
 - CWL workflow of the described procedures to be used for new data analyses
 - Rscript command line version to be used with CWL
-
-
 
