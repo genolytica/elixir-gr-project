@@ -7,7 +7,7 @@ SPECIES="$2"
 
 # Directory variables
 WORK=/media/galadriel/hybridstat/elixir_project
-FASTQ_PATH=$WORK/datasets/$ACCESSION/fastq_trim
+FASTQ_PATH=$WORK/datasets/$ACCESSION/$fq
 HISAT2_OUTPUT=$WORK/datasets/$ACCESSION/hisat2_out
 
 # Command tool variables
@@ -26,10 +26,6 @@ elif [[ "$SPECIES" = 'mouse' ]]; then
 else
 	exit 1
 fi
-
-
-#Bowtie Index
-
 
 # Number of cores to use
 CORES=10
