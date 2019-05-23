@@ -1,14 +1,11 @@
 #!/bin/bash
 set -e 
 
-# Input variables
-ACCESSION="$1"
-SPECIES="$2"
+source ~/cong.sh
 
 # Directory variables
-WORK=/media/galadriel/hybridstat/elixir_project
-FASTQ_PATH=$WORK/datasets/$ACCESSION/$fq
-HISAT2_OUTPUT=$WORK/datasets/$ACCESSION/hisat2_out
+FASTQ_PATH=$WORK/datasets/$GSE/$fq
+HISAT2_OUTPUT=$WORK/datasets/$GSE/hisat2_out
 
 # Command tool variables
 SAMTOOLS_COMMAND=$WORK/tools/samtools-1.9/samtools

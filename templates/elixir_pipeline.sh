@@ -4,7 +4,7 @@
 # STEP 0
 ########
 #Set env variables
-WORK='/media/galadriel/hybridstat/elixir_project'
+source ~/cong.sh
 GSE="$1"
 SPECIES="$2"
 STRAND="$3"
@@ -92,7 +92,7 @@ fi
 ########
 #Alignment to reference
 mkdir -p $WORK/datasets/$GSE/hisat2_out
-bash $WORK/scripts/map_hisat2_advanced_single-end.sh $GSE $SPECIES
+bash $WORK/scripts/map_hisat2_advanced_$PAIRED-end.sh $GSE $SPECIES
 
 #### ADD FUNCTIONALITY FOR PAIRED-END
 
