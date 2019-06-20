@@ -6,7 +6,7 @@
 #             line 3 contains each sample's sequencing protocol
 # Tab separated
 
-#set -e 
+set -e 
 
 ###########################################################################################################
 # STEP 0
@@ -68,7 +68,7 @@ done
 ###########################################################################################################
 # STEP 2a
 ########
-#Quality control FastQC
+# Quality control FastQC
 mkdir -p $WORK/datasets/$GSE/fastqc
 
 cd $WORK/datasets/$GSE/fastq
@@ -86,7 +86,7 @@ done
 # ###########################################################################################################
 # # STEP 2b
 # ########
-# #Trim bp ends (if prompted)
+# Trim bp ends (if prompted) and re-run FastQC
 if [[ "$fq" = "fastq_trim" ]]; then
     mkdir -p $WORK/datasets/$GSE/fastq_trim
     for FILE in $WORK/datasets/$GSE/fastq/*.fastq.gz
@@ -96,14 +96,37 @@ if [[ "$fq" = "fastq_trim" ]]; then
         $WORK/tools/seqtk-1.3/seqtk trimfq $FILE > $WORK/datasets/$GSE/fastq_trim/$TRIMMED
         gzip $WORK/datasets/$GSE/fastq_trim/$TRIMMED
     done
+    
+    cd $WORK/datasets/$GSE/fastq_trim
+    mkdir -p $WORK/datasets/$GSE/fastqc_trim
+    
+    $WORK/tools/fastqc-0.11.8/fastqc \
+        --outdir $WORK/datasets/$GSE/fastqc_trim *.fastq.gz
 fi
 
+
+###########################################################################################################
+# STEP 2c
+########
+# MultiQC report
+mkdir -p $WORK/datasets/$GSE/multiqc
+
+cd $WORK/datasets/$GSE/$fq
+
+source /home/makis/cwlenv/bin/activate
+
+multiqc . \
+    -fd \
+    -i $GSE \
+    -b "Aggregate quality control for $GSE" \
+    -o $WORK/datasets/$GSE/multiqc
+
+deactivate
 
 ###########################################################################################################
 # STEP 3
 ########
 # Directory variables
-fq="fastq"
 export FASTQ_PATH=$WORK/datasets/$GSE/$fq
 export HISAT2_OUTPUT=$WORK/datasets/$GSE/hisat2_out
 
