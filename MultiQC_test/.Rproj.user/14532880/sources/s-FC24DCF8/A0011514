@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1561362933926.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "A0011514",
+    "lastKnownWriteTime" : 1561363776,
+    "last_content_update" : 1561363776736,
+    "path" : "~/Documents/MultiQC_test/app.R",
+    "project_path" : "app.R",
+    "properties" : {
+        "cursorPosition" : "12,1",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
