@@ -77,8 +77,8 @@ $WORK/tools/fastqc-0.11.8/fastqc \
 while true; do
     read -p "Inspect FastQC files. Do you need to perform seqtk trimming?" yn
     case $yn in
-        [Yy]* ) export fq="fastq_trim"; echo "seqtk trimming enabled"; break;;
-        [Nn]* ) export fq="fastq"; echo "seqtk trimming will be skipped"; break;;
+        [Yy]* ) export fq="fastq_trim"; export fqc_dir="fastqc_trim"; echo "seqtk trimming enabled"; break;;
+        [Nn]* ) export fq="fastq"; export fqc_dir="fastqc"; echo "seqtk trimming will be skipped"; break;;
         * ) echo "Please answer yes or no.";;
     esac
 done
@@ -111,7 +111,7 @@ fi
 # MultiQC report
 mkdir -p $WORK/datasets/$GSE/multiqc
 
-cd $WORK/datasets/$GSE/$fq
+cd $WORK/datasets/$GSE/$fqc_dir
 
 source /home/makis/cwlenv/bin/activate
 
@@ -190,7 +190,7 @@ echo "Normalizing"
 cd $WORK/datasets/$GSE/bigwig
 perl $WORK/scripts/normalize_bedgraph.pl \
     --input $WORK/datasets/$GSE/bigwig/*.bedGraph \
-    --exportfactors $WORK/datasets/$GSE/bigwig/GSE78271_factors.txt \
+    --exportfactors $WORK/datasets/$GSE/bigwig/$GSE_factors.txt \
     --ncores $NCORES
 
 ###########################################################################################################
@@ -216,6 +216,8 @@ if [[ "$SPECIES" = 'human' ]]; then
 elif [[ "$SPECIES" = 'mouse' ]]; then
     genome="mm10"
 fi
+
+echo "$genome" > genome
 
 echo "Generating Analysis .Rda file"
 Rscript $WORK/scripts/metaseqR_workflow.R $GSE $genome 0.12
