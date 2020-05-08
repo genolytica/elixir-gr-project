@@ -1,0 +1,10 @@
+fastq:
+  - class: File
+    path: ../example_data/SRR396636.sra_1.fastq
+  - class: File
+    path: ../example_data/SRR396636.sra_2.fastq
+  - class: File
+    path: ../example_data/SRR396637.sra_1.fastq
+  - class: File
+    path: ../example_data/SRR396637.sra_2.fastq
+outdir: ../example_data

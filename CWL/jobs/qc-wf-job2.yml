@@ -1,0 +1,6 @@
+fastq:
+  - class: File
+    path: ../example_data/Hsapiens_1.fastq
+  - class: File
+    path: ../example_data/Hsapiens_2.fastq
+outdir: ../example_data

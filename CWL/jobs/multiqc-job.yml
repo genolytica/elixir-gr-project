@@ -1,0 +1,19 @@
+qc_files_array:
+  - class: File
+    path: ../example_data/SRR396636.sra_1_fastqc.zip
+  - class: File
+    path: ../example_data/SRR396636.sra_1_fastqc.html
+  - class: File
+    path: ../example_data/SRR396636.sra_2_fastqc.zip
+  - class: File
+    path: ../example_data/SRR396636.sra_2_fastqc.html
+  - class: File
+    path: ../example_data/SRR396637.sra_1_fastqc.zip
+  - class: File
+    path: ../example_data/SRR396637.sra_1_fastqc.html
+  - class: File
+    path: ../example_data/SRR396637.sra_2_fastqc.zip
+  - class: File
+    path: ../example_data/SRR396637.sra_2_fastqc.html
+outdir: ../example_data
+#report_name: 
