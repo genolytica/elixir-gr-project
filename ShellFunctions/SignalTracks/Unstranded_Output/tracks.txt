@@ -1,4 +1,0 @@
-track type=bigWig color=180,0,0 visibility=full maxHeightPixels=128:64:16 name=con1 bigDataUrl=/con1.bigWig
-track type=bigWig color=180,0,0 visibility=full maxHeightPixels=128:64:16 name=con2 bigDataUrl=/con2.bigWig
-track type=bigWig color=0,180,0 visibility=full maxHeightPixels=128:64:16 name=dox1 bigDataUrl=/dox1.bigWig
-track type=bigWig color=0,180,0 visibility=full maxHeightPixels=128:64:16 name=dox2 bigDataUrl=/dox2.bigWig

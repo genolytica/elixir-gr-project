@@ -1,6 +1,0 @@
-> Rscript runSignalTracks.R --targets=targets.txt --org=hg19 --overwrite=TRUE
-	
-> Rscript runSignalTracks.R --targets=targets.txt --org=hg19 --stranded=TRUE --overwrite=TRUE --hubinfo_name="MyHub" --hubinfo_sl="MyHub" --hubinfo_ll="MyHub" --hubinfo_email="someone@example.com"
-
-
-signalTracks("targets.txt",org="hg19")
