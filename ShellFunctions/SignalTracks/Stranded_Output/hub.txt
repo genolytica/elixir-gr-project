@@ -1,0 +1,5 @@
+hub MyHub
+shortLabel MyHub
+longLabel MyHub
+genomesFile genomes.txt
+email someone@example.com
