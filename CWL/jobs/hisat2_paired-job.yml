@@ -1,0 +1,18 @@
+hisat2_idx_basedir:
+  class: Directory
+  path: ../reference/grch38_tran
+hisat2_idx_basename: genome_tran
+
+fastq1:
+  class: File
+  path:  ../example_data/SRR396636.sra_1.fastq
+
+fastq2:
+  class: File
+  path:  ../example_data/SRR396636.sra_2.fastq
+
+add_chr: true
+
+#cores:
+sam_output: SRR396636_hisat2.sam
+unmapped_fastq: SRR396636_unmapped.fastq

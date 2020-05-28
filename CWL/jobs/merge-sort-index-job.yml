@@ -1,0 +1,7 @@
+input_bam:
+  -  - {class: File, path: ../example_data/SRR396636.sra_1.hisat2.bam}
+     - {class: File, path: ../example_data/SRR396636.sra_1_unmapped.1_remap_tmp.bam}
+  -  - {class: File, path: ../example_data/SRR396637.sra_1.hisat2.bam}
+     - {class: File, path: ../example_data/SRR396637.sra_1_unmapped.1_remap_tmp.bam}
+force_overwrite: true
+sorted_bam: [SRR396636.bam, SRR396637.bam]

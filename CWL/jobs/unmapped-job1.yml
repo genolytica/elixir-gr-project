@@ -1,0 +1,9 @@
+output_as_bam: true
+input_as_sam: true
+include_header: true
+input_sam:
+  class: File
+  path: ../example_data/SRR396636.sra_1_unmapped.1_remap_tmp.sam
+header:
+  class: File
+  path: ../example_data/SRR396636.sra_1.hisat2.header.sam

@@ -3,10 +3,10 @@
 cwlVersion: v1.0
 class: Workflow
 
-label: FastQC parallel
+label: FastQC parallel and MultiQC
 doc: |
   This CWL scatters FastQC quality control over multiple processors, one for
-  each file and MultiQC report
+  each file and creates the MultiQC report
   version: 0.01
 
 requirements:
@@ -27,7 +27,7 @@ inputs:
 steps:
   fastqc:
     doc: "FastQC - Quality Control for multiple fastq"
-    run: ../workflows/fastqc-wf.cwl
+    run: fastqc-wf.cwl
     in:
       threads: threads
       fastq: fastq
@@ -60,13 +60,7 @@ outputs:
     type: File
     outputSource: multiqc/multiqc_html
 
-# Metadata
-#s:author:
-#  - class: s:Person
-#    s:identifier: https://orcid.org/0000-0002-4199-0333
-#    s:email: mailto:pmoulos@hybridstat.com
-#    s:name: Panagiotis Moulos
-#
+## Metadata
 #$namespaces:
 #  s: https://schema.org/
 #  edam: http://edamontology.org/

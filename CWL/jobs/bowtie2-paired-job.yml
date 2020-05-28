@@ -1,0 +1,19 @@
+bowtie2_idx_basedir:
+  class: Directory
+  path: ../reference/GRCh38_BT
+bowtie2_idx_basename: GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index
+
+fq1:
+  class: File
+  path: ../example_data/SRR396636_unmapped.1.fastq
+
+fq2:
+  class: File
+  path:  ../example_data/SRR396636_unmapped.2.fastq
+
+#cores:
+#local: true
+local_preset: --very-sensitive-local
+dovetail: true
+
+sam_output: SRR396636_unmapped_remap_tmp.sam
