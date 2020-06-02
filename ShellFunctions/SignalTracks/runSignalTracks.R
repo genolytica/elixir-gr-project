@@ -1,30 +1,28 @@
 #! /usr/local/bin/Rscript
 
-# Wrapper for the signalTracks script.
+# Wrapper for the createSignalTracks() function
 
 suppressPackageStartupMessages(library("optparse"))
-source("signalTracks.R")
+library(metaseqR2)
 
 option_list <- list(
 	make_option(
 		opt_str="--targets",
 		action="store",
-		default=NULL,
 		help="A tab-delimited file with the experimental description"
 	),
 	make_option(
 		opt_str="--org",
 		action="store",
-		default="hg19",
 		help=paste0("For human genomes 'hg18', 'hg19' or 'hg38'\n",
-							 "for mouse genomes 'mm9', 'mm10'\n", 
-							 "for rat genomes 'rn5' or 'rn6'\n",
-							 "for drosophila genome 'dm3' or 'dm6'\n",
-							 "for zebrafish genome 'danrer7', 'danrer10' or 'danrer11'\n", 
-							 "for chimpanzee genome 'pantro4', 'pantro5'\n", 
-							 "for pig genome 'susscr3', 'susscr11\n'", 
-							 "for Arabidopsis thaliana genome 'tair10'\n" ,
-							 "for Equus caballus genome 'equcab2'."
+			"for mouse genomes 'mm9', 'mm10'\n", 
+			"for rat genomes 'rn5' or 'rn6'\n",
+			"for drosophila genome 'dm3' or 'dm6'\n",
+			"for zebrafish genome 'danrer7', 'danrer10' or 'danrer11'\n",
+			"for chimpanzee genome 'pantro4', 'pantro5'\n", 
+			"for pig genome 'susscr3', 'susscr11\n'", 
+			"for Arabidopsis thaliana genome 'tair10'\n" ,
+			"for Equus caballus genome 'equcab2'."
 		)
 	),
 	make_option(
@@ -116,7 +114,7 @@ if (!(opt$org %in% c("hg18", "hg19", "hg38", "mm9","mm10", "rn5", "rn6", "dm3", 
 	stop("The organism must be one of \"hg18\", \"hg19\", \"hg38\", \"mm9\",\"mm10\", \"rn5\", \"rn6\", \"dm3\", \"dm6\", \"danrer7\",\"pantro4\", \"susscr3\", \"tair10\", \"equcab2\"!")
 if (!is.numeric(opt$normto) || opt$normto<0)
 	stop("Fragment length must be a positive large integer!")
-
-signalTracks(targets=opt$targets,org=opt$org,urlBase=opt$urlbase,stranded=opt$stranded,normTo=opt$normto,
+	
+createSignalTracks(targets=opt$targets,org=opt$org,urlBase=opt$urlbase,stranded=opt$stranded,normTo=opt$normto,
 	exportPath=opt$exportpath,hubInfo=list(name=opt$hubinfo_name,shortLabel=opt$hubinfo_sl,longLabel=opt$hubinfo_ll,
-	email=opt$hubinfo_email),overwrite=opt$overwrite,rc=opt$rc)
+	email=opt$hubinfo_email),overwrite=opt$overwrite,rc=opt$rc)	

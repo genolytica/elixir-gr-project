@@ -1,12 +1,14 @@
 # generate-signal-tracks
 
-An R script for creating signal tracks.
+A shell script for creating signal tracks.
 
 ## Description
 
-This R script creates bigWig files to be used for exploring RNA signal in genome browsers. 
-When strands are separated, a UCSC genome browser trackhub is created to group tracks
-for the same sample. A link to the created data is returned.
+This shell script ```runSignalTracks.R```, calls the createSignalTracks() function
+of the metaseqR2 package and creates bigWig files to be used for exploring RNA signal
+in genome browsers. When strands are separated, a UCSC genome browser trackhub is
+created to group tracks for the same sample. A link to the created data is returned.
+The script can be invoked from the system shell instead of the R shell, using ```Rscript```.
 
 The script performs the following tasks:
 1. Reads the targets file in order to read in the BAM files and make the Rles.
@@ -22,50 +24,11 @@ The script performs the following tasks:
    and negative strand for each sample are exported, including the generated genomes,
    hub (entry point) and trackDb files as well as the hub link.
 
-
-The main implementation comes also with a shell script, ```runSignalTracks.R```
-that can be invoked from the system shell instead of the R shell, using ```Rscript```.
-
 ## Prerequisite R/Bioconductor packages
 The following packages are required to run the script:
-#- rtracklayer
-#- Rsamtools
-##- parallel
-##- GenomeInfoDb
-##- GenomicAlignments
-##- GenomicRanges
 - metaseqR2
 
-
-## Main usage
-### From within R
-```
-source("signalTracks.R")
-signalTracks(
-    targets="targets.txt",
-    org="hg19"
-)
-
-# OR
-
-source("signalTracks.R")
-tracks <- signalTracks (
-    targets="targets.txt",
-    org="hg19",
-    urlBase=NULL,
-    stranded=FALSE,
-    normTo=1e+9,
-    exportPath=".",
-    hubInfo=list(name="MyHub",shortLabel="My hub", longLabel="My hub",email="someone@example.com"),
-    overwrite=FALSE,
-    rc=NULL
-)
-
-# OR
-# see arguments
-```
-
-### From the shell
+## Basic Example
 ```
 Rscript runSignalTracks.R \
 	--targets=targets.txt \
@@ -84,8 +47,6 @@ Rscript runSignalTracks.R \
 	--hubinfo_email="someone@example.com"
 ```
 
-
-
 ## List of arguments
 
 The following table presents the input arguments in detail:
@@ -102,4 +63,4 @@ The following table presents the input arguments in detail:
 |overwrite	 |Overwrite tracks if they exist? Defaults to FALSE.|
 |rc		     |Fraction of cores to use.|
 
-## Inicative runtimes
+## Indicative runtimes
