@@ -101,6 +101,26 @@ option_list <- list(
 			"or a user based one (similar to the org argument)."
 		)
 	),
+#	make_option(
+# 		opt_str="--version",
+#		action="store",
+#		type="numeric",
+#		default="auto",
+#		help=paste0(
+#			"An integer denoting the version of the annotation to use from the local annotation\n",
+#			"database or fetch on the fly. For Ensembl, it corresponds to Ensembl releases, while\n",
+#			"for UCSC/RefSeq, it is the date of creation (locally)."
+#		)
+#	),
+	make_option(
+		opt_str="--translevel",
+		action="store",
+		default="gene",
+		help=paste0(
+			"Perform differential expression analysis at which transcriptional unit, can be one of 'gene'(default),\n",
+			"'transcript' for reporting differential expression at the transcript level or 'exon' for exon level."
+		)
+	),
 	make_option(
 		opt_str="--counttype",
 		action="store", 
@@ -131,116 +151,150 @@ option_list <- list(
 			"when analyzing Quant-Seq data."
 		)
 	),
-#------------------------------------------------------------------------------------------	
-#	make_option(
-#		opt_str="--exonfltr",
-#		action="store_true",
-#		default="list",
-#		help=paste0(
-#			"The supported exon filter in the current version is minActiveExons which\n",
-#			"implements a filter for demanding m out of n exons of a gene to have a certain\n",
-#			"read presence with parameters exonfltr_exonsprgene, exonfltr_minexons and exonfltr_frac.\n",
-#			"The filter is described as follows: if a gene has up to exonfltr_exonsprgene exons,\n",
-#			"then read presence is required in at least exonfltr_minexons of them, else read presence\n",
-#			"is required in a exonfltr_frac fraction of the total exons. With the default values, the filter\n",
-#			"instructs that if a gene has up to 5 exons, read presence is required in at least 2, else\n",
-#			"in at least 20 exons, in order to be accepted. Set exonfltr=NULL to not apply any exon filtering.\n",
-#			"To apply your own filter parameters, change arguments exonfltr_exonsprgene, exonfltr_minexons, exonfltr_minexons."  
-#		)
-#	),
-#	make_option(
-#		opt_str="--exonfltr_exonsprgene",
-#		action="store",
-#		default=5,
-#		help="Exon filter: Exons per gene. Defaults to 5."
-#	),
-#	make_option(
-#		opt_str="--exonfltr_minexons",
-#		action="store",
-#		default=2,
-#		help=paste0(
-#			"Exon filter: read presence is required in at least exonfltr_minexons of\n",
-#			"exonfltr_exonsprgene. Defaults to 2."
-#		)
-#	),
-#	make_option(
-#		opt_str="--exonfltr_frac",
-#		action="store",
-#		default=1/5,
-#		help=paste0(
-#			"Exon filter: if read presence in at least exonfltr_minexons of exonfltr_exonsprgene\n",
-#			"not true, read presence is required in a exonfltr_frac fraction of the total exons.\n",
-#			"Defaults to 1/5."
-#		)
-#	),
-##------------------------------------------------------------------------------------------	
-#	make_option(
-#		opt_str="--genefltr1_length",
-#		action="store",
-#		default=500,
-#		help=paste0(
-#			"Gene filter1: length filter where genes are accepted for further analysis if\n",
-#			"they are above genefltr_length. Defaults to 500."
-#		)
-#	),
-#	make_option(
-#		opt_str="--genefltr2_avgperbp",
-#		action="store",
-#		default=100,
-#		help=paste0(
-#			"Gene filter2: a gene is accepted for further analysis if it has more average\n",
-#			"reads than the genefltr_avgquantile of the average count distribution per\n",
-#			"genefltr_avgperbp base pairs. Defaults to 100."
-#		)
-#	),
-#	make_option(
-#		opt_str="--genefltr2_avgquantile",
-#		action="store",
-#		default=0.25,
-#		help=paste0(
-#			"Gene filter2: length filter where genes are accepted for further analysis if\n",
-#			"they are above genefltr_length. Defaults to 500."
-#		)
-#	),
-#	make_option(
-#		opt_str="--genefltr3_expmedian",
-#		action="store",
-#		default=TRUE,
-#		help=paste0(
-#			"Gene filter3: based on the overall expression of a gene. Genes below the median\n",
-#			"of the overall count distribution are not accepted for further analysis. Defaults to TRUE."
-#		)
-#	),
-#	make_option(
-#		opt_str="--genefltr3_expmean",
-#		action="store",
-#		default=FALSE,
-#		help=paste0(
-#			"Gene filter3: based on the overall expression of a gene. Genes below the mean\n",
-#			"of the overall count distribution are not accepted for further analysis. Defaults to FALSE."
-#		)
-#	),
-#	make_option(
-#		opt_str="--genefltr3_expquantile",
-#		action="store",
-#		default=NA,
-#		help=paste0(
-#			"Gene filter3: based on the overall expression of a gene. Genes below the specified\n",
-#			"quantile of the total counts distribution are not accepted for further analysis."
-#		)
-#	),
-#	make_option(
-#		opt_str="--genefltr3_expknown",
-#		action="store",
-#		default=NA,
-#		help=paste0(
-#			"Gene filter3: based on the overall expression of a gene. A set of known not-expressed\n",
-#			"genes in the system under investigation are used to estimate an expression cutoff.\n",
-#			"The value of this filter is a character vector of HUGO gene symbols (MUST be contained\n",
-#			"in the annotation, thus it's better to use annotation='download') whose counts are used\n",
-#			"to build a 'null' expression distribution. The 90th quantile of this distribution is then."
-#		)
-#	),
+	make_option(
+		opt_str="--exonfltr",
+		action="store",
+		default=TRUE,
+		help=paste0(
+			"The supported exon filter in the current version is minActiveExons which\n",
+			"implements a filter for demanding m out of n exons of a gene to have a certain\n",
+			"read presence with parameters exonfltr_exonsprgene, exonfltr_minexons and exonfltr_frac.\n",
+			"The filter is described as follows: if a gene has up to exonfltr_exonsprgene exons,\n",
+			"then read presence is required in at least exonfltr_minexons of them, else read presence\n",
+			"is required in a exonfltr_frac fraction of the total exons. With the default values, the filter\n",
+			"instructs that if a gene has up to 5 exons, read presence is required in at least 2, else\n",
+			"in at least 20 exons, in order to be accepted. Set exonfltr=FALSE to NOT apply\n",
+			"the minActiveExons filter. To apply your own filter parameters, change arguments\n",
+			"exonfltr_exonsprgene, exonfltr_minexons, exonfltr_minexons."  
+		)
+	),
+	make_option(
+		opt_str="--exonfltr_exonsprgene",
+		action="store",
+		default=5,
+		help="minActiveExons filter: Exons per gene. Defaults to 5."
+	),
+	make_option(
+		opt_str="--exonfltr_minexons",
+		action="store",
+		default=2,
+		help=paste0(
+			"minActiveExons filter: read presence is required in at least exonfltr_minexons of\n",
+			"exonfltr_exonsprgene. Defaults to 2."
+		)
+	),
+	make_option(
+		opt_str="--exonfltr_frac",
+		action="store",
+		default=1/5,
+		help=paste0(
+			"minActiveExons filter: if read presence in at least exonfltr_minexons of exonfltr_exonsprgene\n",
+			"not true, read presence is required in a exonfltr_frac fraction of the total exons.\n",
+			"Defaults to 1/5."
+		)
+	),
+	make_option(
+		opt_str="--genefltr",
+		action="store",
+		default=TRUE,
+		help=paste0("Set genefltr=FALSE to NOT apply any gene filtering. To apply your own\n",
+			"filters parameters, change arguments:\n",
+			"genefltr1_length (default 500) for length filter, where genes are accepted for further analysis\n",    
+			"genefltr2_avgperbp (default 100) for average reads filter, where a gene is accepted for further analysis\n",
+			"if it has more average reads than the genefltr_avgquantile (default 0.25) of the average count\n",
+			"distribution per genefltr_avgperbp base pairs\n",
+			"genefltr2_avgquantile (default 0.25)\n",
+			"genefltr3_expmedian (default TRUE) for a filter based on the overall expression of a gene.\n",
+			"Genes below the median of the overall count distribution are not accepted for further analysis.\n", 
+			"genefltr3_expmean (default FALSE) for a filter based on the overall expression of a gene.\n",
+			"Genes below the mean of the overall count distribution are not accepted for further analysis.\n",      
+			"genefltr3_expquantile (default NA) for a filter based on the overall expression of a gene.\n",
+			"Genes below the the specified quantile of the total counts distribution are not accepted\n",
+			"for further analysis.\n",  
+			"genefltr3_expknown (default NA) for a filter based on the overall expression of a gene.\n",
+			"A set of known not-expressed genes in the system under investigation are used to estimate\n",
+			"an expression cutoff.\n",   
+			"genefltr4_biotype!!! genes with a certain biotype (MUST be contained in the annotation,\n",
+			"thus it's better to use annotation='download') are excluded from the analysis.\n",    
+			"genefltr5_frac (default 0.25) where a gene is further considered for statistical testing if genefltr5_frac\n",
+			"(x100 for a percentage value) have more than genefltr5_mincount reads across all samples\n",
+			"(genefltr5_percon=FALSE) or across the samples of each condition (genefltr5_percon=TRUE)\n",      
+			"genefltr5_mincount (default 10) where a gene is further considered for statistical testing if genefltr5_frac\n",
+			"(x100 for a percentage value) have more than genefltr5_mincount reads across all samples\n",
+			"(genefltr5_percon=FALSE) or across the samples of each condition (genefltr5_percon=TRUE)\n",    
+			"genefltr5_percon (default FALSE) where a gene is further considered for statistical testing if genefltr5_frac\n",
+			"(x100 for a percentage value) have more than genefltr5_mincount reads across all samples\n",
+			"(genefltr5_percon=FALSE) or across the samples of each condition (genefltr5_percon=TRUE)"
+		)
+	),
+	make_option(
+		opt_str="--genefltr1_length",
+		action="store",
+		default=500,
+		help=paste0(
+			"Gene filter1: length filter where genes are accepted for further analysis if\n",
+			"they are above genefltr_length. Defaults to 500."
+		)
+	),
+	make_option(
+		opt_str="--genefltr2_avgperbp",
+		action="store",
+		default=100,
+		help=paste0(
+			"Gene filter2: a gene is accepted for further analysis if it has more average\n",
+			"reads than the genefltr_avgquantile of the average count distribution per\n",
+			"genefltr_avgperbp base pairs. Defaults to 100."
+		)
+	),
+	make_option(
+		opt_str="--genefltr2_avgquantile",
+		action="store",
+		default=0.25,
+		help=paste0(
+			"Gene filter2: a gene is accepted for further analysis if it has more average\n",
+			"reads than the genefltr_avgquantile of the average count distribution per\n",
+			"genefltr_avgperbp base pairs. Defaults to 0.25."
+		)
+	),
+	make_option(
+		opt_str="--genefltr3_expmedian",
+		action="store",
+		default=TRUE,
+		help=paste0(
+			"Gene filter3: based on the overall expression of a gene. Genes below the median\n",
+			"of the overall count distribution are not accepted for further analysis. Defaults to TRUE."
+		)
+	),
+	make_option(
+		opt_str="--genefltr3_expmean",
+		action="store",
+		default=FALSE,
+		help=paste0(
+			"Gene filter3: based on the overall expression of a gene. Genes below the mean\n",
+			"of the overall count distribution are not accepted for further analysis. Defaults to FALSE."
+		)
+	),
+	make_option(
+		opt_str="--genefltr3_expquantile",
+		action="store",
+		default=NA,
+		help=paste0(
+			"Gene filter3: based on the overall expression of a gene. Genes below the specified\n",
+			"quantile of the total counts distribution are not accepted for further analysis."
+		)
+	),
+	make_option(
+		opt_str="--genefltr3_expknown",
+		action="store",
+		default=NA,
+		help=paste0(
+			"Gene filter3: based on the overall expression of a gene. A set of known not-expressed\n",
+			"genes in the system under investigation are used to estimate an expression cutoff.\n",
+			"The value of this filter is a character vector of HUGO gene symbols (MUST be contained\n",
+			"in the annotation, thus it's better to use annotation='download') whose counts are used\n",
+			"to build a 'null' expression distribution. The 90th quantile of this distribution is then."
+		)
+	),
 #	make_option(
 #		opt_str="--genefltr4_biotype",
 #		action="store",
@@ -252,51 +306,50 @@ option_list <- list(
 #			"and values are TRUE or FALSE. If the biotype should be excluded, the value should be TRUE else FALSE."
 #		)
 #	),
-#	make_option(
-#		opt_str="--genefltr5_frac",
-#		action="store",
-#		default=0.25,
-#		help=paste0(
-#			"Gene filter5: a gene is further considered for statistical testing if genefltr5_frac\n",
-#			"(x100 for a percentage value) have more than genefltr5_mincount reads across all samples\n",
-#			"(genefltr5_percon=FALSE) or across the samples of each condition (genefltr5_percon=TRUE)\n",
-#			"Defaults to 0.25."
-#		)
-#	),
-#	make_option(
-#		opt_str="--genefltr5_mincount",
-#		action="store",
-#		default=10,
-#		help=paste0(
-#			"Gene filter5: a gene is further considered for statistical testing if genefltr5_frac\n",
-#			"(x100 for a percentage value) have more than genefltr5_mincount reads across all samples\n",
-#			"(genefltr5_percon=FALSE) or across the samples of each condition (genefltr5_percon=TRUE)\n",
-#			"Defaults to 10."
-#		)
-#	),
-#	make_option(
-#		opt_str="--genefltr5_percon",
-#		action="store",
-#		default=FALSE,
-#		help=paste0(
-#			"Gene filter5: a gene is further considered for statistical testing if genefltr5_frac\n",
-#			"(x100 for a percentage value) have more than genefltr5_mincount reads across all samples\n",
-#			"(genefltr5_percon=FALSE) or across the samples of each condition (genefltr5_percon=TRUE)\n",
-#			"Defaults to FALSE."
-#		)
-#	),	
-#------------------------------------------------------------------------------------------	
-#	make_option(
-#		opt_str="--whenapplyfilter",
-#		action="store",
-#		default="postnorm",
-#		help=paste0(
-#			"A character string determining when to apply the exon and/or gene filters,\n",
-#			"relative to normalization. It can be 'prenorm' to apply the filters and exclude genes\n",
-#			"from further processing before normalization, or 'postnorm' to apply the filters\n",
-#			"after normalization (default)."
-#		)
-#	),
+	make_option(
+		opt_str="--genefltr5_frac",
+		action="store",
+		default=0.25,
+		help=paste0(
+			"Gene filter5: a gene is further considered for statistical testing if genefltr5_frac\n",
+			"(x100 for a percentage value) have more than genefltr5_mincount reads across all samples\n",
+			"(genefltr5_percon=FALSE) or across the samples of each condition (genefltr5_percon=TRUE)\n",
+			"Defaults to 0.25."
+		)
+	),
+	make_option(
+		opt_str="--genefltr5_mincount",
+		action="store",
+		default=10,
+		help=paste0(
+			"Gene filter5: a gene is further considered for statistical testing if genefltr5_frac\n",
+			"(x100 for a percentage value) have more than genefltr5_mincount reads across all samples\n",
+			"(genefltr5_percon=FALSE) or across the samples of each condition (genefltr5_percon=TRUE)\n",
+			"Defaults to 10."
+		)
+	),
+	make_option(
+		opt_str="--genefltr5_percon",
+		action="store",
+		default=FALSE,
+		help=paste0(
+			"Gene filter5: a gene is further considered for statistical testing if genefltr5_frac\n",
+			"(x100 for a percentage value) have more than genefltr5_mincount reads across all samples\n",
+			"(genefltr5_percon=FALSE) or across the samples of each condition (genefltr5_percon=TRUE)\n",
+			"Defaults to FALSE."
+		)
+	),		
+	make_option(
+		opt_str="--whenapplyfilter",
+		action="store",
+		default="postnorm",
+		help=paste0(
+			"A character string determining when to apply the exon and/or gene filters,\n",
+			"relative to normalization. It can be 'prenorm' to apply the filters and exclude genes\n",
+			"from further processing before normalization, or 'postnorm' to apply the filters\n",
+			"after normalization (default)."
+		)
+	),
 	make_option(
 		opt_str="--normalization",
 		action="store",
@@ -381,9 +434,40 @@ option_list <- list(
 
 opt <- parse_args(OptionParser(option_list=option_list))
 
+exonFilters <- list()
+geneFilters <- list()
+
+if (isTRUE(opt$exonfltr)){
+			exonFilters=list(
+				minActiveExons=list(
+					exonsPerGene=opt$exonfltr_exonsprgene,
+					minExons=opt$exonfltr_minexons,
+					frac=opt$exonfltr_frac))
+}else{assign("exonFilters", NULL, envir = .GlobalEnv)}
+
+if (isTRUE(opt$genefltr)){
+			geneFilters=list(
+				length=list(
+					length=opt$genefltr1_length),
+			avgReads=list(
+				averagePerBp=opt$genefltr2_avgperbp,
+				quantile=opt$genefltr2_avgquantile),
+			expression=list(
+				median=opt$genefltr3_expmedian,
+				mean=opt$genefltr3_expmean,
+				quantile=opt$genefltr3_expquantile,
+				known=opt$genefltr3_expknown),
+			#biotype=opt$genefltr4_biotype,
+			presence=list(
+				frac=opt$genefltr5_frac,
+				minCount=opt$genefltr5_mincount,
+				perCondition=opt$genefltr5_percon))
+}else{assign("geneFilters", NULL, envir = .GlobalEnv)}
+			
 # TODO: more checks
 if (!(opt$org %in% c("hg18", "hg19", "hg38", "mm9","mm10", "rn5", "rn6", "dm3", "dm6", "danrer7","pantro4", "susscr3", "tair10", "equcab2" )))
 	stop("The organism must be one of \"hg18\", \"hg19\", \"hg38\", \"mm9\",\"mm10\", \"rn5\", \"rn6\", \"dm3\", \"dm6\", \"danrer7\",\"pantro4\", \"susscr3\", \"tair10\", \"equcab2\"!")
+
 
 metaseqr2(
     sampleList=opt$samplelist,
@@ -394,46 +478,22 @@ metaseqr2(
     libsizeList=opt$libsizelist,
     org=opt$org,
     refdb=opt$refdb,
+    #version=opt$version,
+    transLevel=opt$translevel,
     countType=opt$counttype,
     utrOpts=list(
         frac=opt$utrOpts_frac,
         minLength=opt$utrOpts_minlen,
         downstream=opt$utrOpts_dnstrm
     ),
-    #minActiveExons=opt$exonfltr
-    #exonFilters=list(
-    #    minActiveExons=list(
-    #        exonsPerGene=opt$exonfltr_exonsprgene,
-    #        minExons=opt$exonfltr_minexons,
-    #        frac=opt$exonfltr_frac
-    #    )
-    #),
-    #geneFilters=list(
-    #    length=list(
-    #        length=opt$genefltr1_length
-    #    ),
-    #    avgReads=list(
-    #        averagePerBp=opt$genefltr2_avgperbp,
-    #        quantile=opt$genefltr2_avgquantile
-    #    ),
-    #    expression=list(
-    #        median=opt$genefltr3_expmedian,
-    #        mean=opt$genefltr3_expmean,
-    #        quantile=opt$genefltr3_expquantile,
-    #        known=opt$genefltr3_expknown
-    #    ),
-    #    biotype=opt$genefltr4_biotype,
-    #    presence=list(
-    #        frac=opt$genefltr5_frac,
-    #        minCount=opt$genefltr5_mincount,
-    #        perCondition=opt$genefltr5_percon
-    #    )
-    #),
-    #whenApplyFilter=opt$whenapplyfilter,
+    exonFilters=exonFilters,
+    geneFilters=geneFilters,
+    whenApplyFilter=opt$whenapplyfilter,
     normalization=opt$normalization,
     statistics=opt$statistics,
     #qcPlots=opt$qcplots,
     figFormat=opt$figformat,
+    outList=opt$outlist,
     exportWhere=opt$xprtwhere,
     exportWhat=c("annotation","p_value","adj_p_value","fold_change","stats","counts","flags"),
     exportScale="natural",
