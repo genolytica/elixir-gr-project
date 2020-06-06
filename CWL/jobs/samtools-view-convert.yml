@@ -1,0 +1,8 @@
+#cores:
+output_as_bam: true
+input_as_sam: true
+include_header: true
+input_sam:
+  class: File
+  path: ../example_data/SRR396636_hisat2.sam
+bam_output: SRR396636_hisat2.bam
