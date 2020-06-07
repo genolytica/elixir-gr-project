@@ -20,7 +20,7 @@ inputs:
   threads:
     type: int?
   outdir:
-    type: string
+    type: string?
   fastq:
     type: File[]
 
@@ -60,11 +60,11 @@ outputs:
     type: File
     outputSource: multiqc/multiqc_html
 
-## Metadata
-#$namespaces:
-#  s: https://schema.org/
-#  edam: http://edamontology.org/
+# Metadata
+$namespaces:
+  s: https://schema.org/
+  edam: http://edamontology.org/
 
-#$schemas:
-# - https://schema.org/version/latest/schema.rdf
-# - http://edamontology.org/EDAM_1.18.owl
+$schemas:
+ - https://schema.org/version/latest/schema.rdf
+ - http://edamontology.org/EDAM_1.18.owl

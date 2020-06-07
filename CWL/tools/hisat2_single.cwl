@@ -43,16 +43,11 @@ inputs:
     label: "Basename of the hisat2 index files"
     doc: "Basename of the hisat2 index files, not including extensions like .1.ht2"
     type: string
-  fastq1:
+  fastq:
     type: File
     doc: "fastq reads"
     inputBinding:
-      prefix: "-1"
-  fastq2:
-    type: File
-    doc: "fastq mates"
-    inputBinding:
-      prefix: "-2"
+      prefix: -U
   sam_output:
     type: string?
     default: output.sam
@@ -69,18 +64,18 @@ outputs:
     outputBinding:
       glob: $(inputs.sam_output)
   output_unmapped:
-	type: File
+    type: File
     doc: "unmapped reads in FASTQ format"
     outputBinding:
       glob: "*.fastq"
 
 #stdout: $(inputs.sam_output)
 
-# Metadata
-#$namespaces:
-#  s: https://schema.org/
-#  edam: http://edamontology.org/
+#Metadata
+$namespaces:
+  s: https://schema.org/
+  edam: http://edamontology.org/
 
-#$schemas:
-#  - https://schema.org/version/latest/schema.rdf
-#  - http://edamontology.org/EDAM_1.18.owl
+$schemas:
+  - https://schema.org/version/latest/schema.rdf
+  - http://edamontology.org/EDAM_1.18.owl

@@ -72,10 +72,10 @@ steps:
     out: [output_sorted]
 
 # Metadata
-#$namespaces:
-#  s: https://schema.org/
-#  edam: http://edamontology.org/
+$namespaces:
+  s: https://schema.org/
+  edam: http://edamontology.org/
 
-#$schemas:
-# - https://schema.org/version/latest/schema.rdf
-# - http://edamontology.org/EDAM_1.18.owl 
+$schemas:
+ - https://schema.org/version/latest/schema.rdf
+ - http://edamontology.org/EDAM_1.18.owl

@@ -18,7 +18,7 @@ arguments:
     valueFrom: $(runtime.outdir)/$(inputs.sam_output)
   - prefix: -x
     valueFrom: $(inputs.bowtie2_idx_basedir.path)/$(inputs.bowtie2_idx_basename)
-	
+
 inputs:
   cores:
     type: int?
@@ -32,7 +32,7 @@ inputs:
       prefix: --local
   dovetail:
     type: boolean?
-	default: false
+    default: false
     doc: "Dovetail option"
     inputBinding:
       prefix: --dovetail
@@ -61,11 +61,11 @@ outputs:
     outputBinding:
       glob: $(inputs.sam_output)
 
-##Metadata
-#$namespaces:
-#  s: https://schema.org/
-#  edam: http://edamontology.org/
-#
-#$schemas:
-#  - https://schema.org/version/latest/schema.rdf
-#  - http://edamontology.org/EDAM_1.18.owl	
+#Metadata
+$namespaces:
+  s: https://schema.org/
+  edam: http://edamontology.org/
+
+$schemas:
+  - https://schema.org/version/latest/schema.rdf
+  - http://edamontology.org/EDAM_1.18.owl

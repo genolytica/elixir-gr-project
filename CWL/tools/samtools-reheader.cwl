@@ -49,11 +49,11 @@ outputs:
 
 stdout: $(inputs.bam_output)
 
-## Metadata
-#$namespaces:
-#  s: https://schema.org/
-#  edam: http://edamontology.org/
-#
-#$schemas:
-#  - https://schema.org/version/latest/schema.rdf
-#  - http://edamontology.org/EDAM_1.18.owl
+# Metadata
+$namespaces:
+  s: https://schema.org/
+  edam: http://edamontology.org/
+
+$schemas:
+  - https://schema.org/version/latest/schema.rdf
+  - http://edamontology.org/EDAM_1.18.owl

@@ -55,16 +55,16 @@ outputs:
       glob: "*_fastqc.html"
 
 # Metadata
-#s:author:
-# - class: s:Person
-#    s:identifier: https://orcid.org/0000-0002-4199-0333
-#    s:email: mailto:pmoulos@hybridstat.com
-#    s:name: Panagiotis Moulos
+s:author:
+  - class: s:Person
+    s:identifier: https://orcid.org/0000-0002-4199-0333
+    s:email: mailto:pmoulos@hybridstat.com
+    s:name: Panagiotis Moulos
 
-#$namespaces:
-#  s: https://schema.org/
-#  edam: http://edamontology.org/
+$namespaces:
+  s: https://schema.org/
+  edam: http://edamontology.org/
 
-#$schemas:
-# - https://schema.org/version/latest/schema.rdf
-# - http://edamontology.org/EDAM_1.18.owl
+$schemas:
+ - https://schema.org/version/latest/schema.rdf
+ - http://edamontology.org/EDAM_1.18.owl

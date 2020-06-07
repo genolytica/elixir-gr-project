@@ -3,7 +3,7 @@
 cwlVersion: v1.0
 class: Workflow
 
-label: Complete mapping pipeline - Single-end data
+label: Complete Mapping pipeline for Single-end data
 doc: |
   A workflow which:
   i) Runs Hisat2 on each fastq while generating a fastq file containing unmapped reads 
@@ -31,6 +31,8 @@ inputs:
   cores_bowtie2:
     type: int? 
   cores_samtools:
+    type: int?
+  cores_qc:
     type: int?
 
   # HISAT2 alignment
@@ -123,7 +125,7 @@ steps:
     out: [output_sam, output_unmapped]
 
   bowtie2:
-    run: ../tools/bowtie2_paired.cwl
+    run: ../tools/bowtie2_single.cwl
     scatter: fq
     in:
       cores: cores_bowtie2
@@ -181,11 +183,11 @@ steps:
       sorted_bam: sorted_bam
     out: [final_bam, final_bai]
 
-## Metadata
-#$namespaces:
-#  s: https://schema.org/
-#  edam: http://edamontology.org/
+# Metadata
+$namespaces:
+  s: https://schema.org/
+  edam: http://edamontology.org/
 
-#$schemas:
-# - https://schema.org/version/latest/schema.rdf
-# - http://edamontology.org/EDAM_1.18.owl
+$schemas:
+ - https://schema.org/version/latest/schema.rdf
+ - http://edamontology.org/EDAM_1.18.owl

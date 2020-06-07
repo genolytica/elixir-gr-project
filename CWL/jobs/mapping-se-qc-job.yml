@@ -1,0 +1,36 @@
+#Cores   
+#cores_hisat2:
+#cores_bowtie2:
+#cores_samtools:
+#cores_qc:
+
+#Quality Control
+fastq:
+  - class: File
+    path: ../example_data/SRR1552444.fastq
+  - class: File
+    path: ../example_data/SRR1552450.fastq
+    
+#HISAT2 alignment
+add_chr: true
+hs_idx_basedir: 
+  class: Directory
+  path: ../reference/grch38_tran
+hs_idx_basename: genome_tran  
+
+# BOWTIE2 alignment - unmapped
+cores_bowtie2:
+local: --very-sensitive-local
+dovetail: true
+bt_idx_basedir:
+  class: Directory
+  path: ../reference/GRCh38_BT
+bt_idx_basename: GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.bowtie_index
+#Samtools View
+output_as_bam: true
+input_as_sam: true
+include_header: true
+header_only: true
+#MSI Workflow
+force_overwrite: true
+sorted_bam: [SRR1552444.bam, SRR1552450.bam]

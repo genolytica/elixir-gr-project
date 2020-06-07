@@ -230,14 +230,11 @@ steps:
       sorted_bam: sorted_bam
     out: [final_bam, final_bai]
 
-## Metadata
-#$namespaces:
-#  s: https://schema.org/
-#  edam: http://edamontology.org/
+# Metadata
+$namespaces:
+  s: https://schema.org/
+  edam: http://edamontology.org/
 
-#$schemas:
-# - https://schema.org/version/latest/schema.rdf
-# - http://edamontology.org/EDAM_1.18.owl
-
-  
-  
+$schemas:
+ - https://schema.org/version/latest/schema.rdf
+ - http://edamontology.org/EDAM_1.18.owl

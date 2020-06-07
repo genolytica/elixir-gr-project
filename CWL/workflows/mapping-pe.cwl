@@ -3,7 +3,7 @@
 cwlVersion: v1.0
 class: Workflow
 
-label: Complete mapping pipeline - Paired-end data
+label: Complete Mapping pipeline for Paired-end data
 doc: |
   A workflow which:
   i) Runs Hisat2 on each fastq pair while generating the fastq files containing unmapped reads 
@@ -197,11 +197,11 @@ steps:
       sorted_bam: sorted_bam
     out: [final_bam, final_bai]
 
-## Metadata
-#$namespaces:
-#  s: https://schema.org/
-#  edam: http://edamontology.org/
+# Metadata
+$namespaces:
+  s: https://schema.org/
+  edam: http://edamontology.org/
 
-#$schemas:
-# - https://schema.org/version/latest/schema.rdf
-# - http://edamontology.org/EDAM_1.18.owl
+$schemas:
+ - https://schema.org/version/latest/schema.rdf
+ - http://edamontology.org/EDAM_1.18.owl
