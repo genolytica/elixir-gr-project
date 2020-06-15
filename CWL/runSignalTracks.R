@@ -3,9 +3,14 @@
 # Wrapper for the createSignalTracks() function
 
 suppressPackageStartupMessages(library(optparse))
-library(metaseqR2)
+suppressPackageStartupMessages(library(metaseqR2))
 
 option_list <- list(
+	make_option(
+		opt_str="--path",
+		action="store",
+		help="Directory where input files are located"
+	),
 	make_option(
 		opt_str="--targets",
 		action="store",
@@ -33,7 +38,7 @@ option_list <- list(
 	),
 	make_option(
 		opt_str="--stranded",
-		action="store",
+		action="store_true",
 		default=FALSE,
 		help=paste0(
 			"Separate + and - strands and create separate bigWig files.\n",
@@ -95,7 +100,7 @@ option_list <- list(
 	),
 	make_option(
 		opt_str="--overwrite",
-		action="store",
+		action="store_true",
 		default=FALSE,
 		help="Overwrite tracks if they exist? Defaults to FALSE."
 	),
@@ -108,6 +113,11 @@ option_list <- list(
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
+#print(opt$workdir)
+#list.files(getwd())
+
+targets <- readTargets(opt$targets, opt$path)
+
 
 # TODO: more checks
 if (!(opt$org %in% c("hg18", "hg19", "hg38", "mm9","mm10", "rn5", "rn6", "dm3", "dm6", "danrer7","pantro4", "susscr3", "tair10", "equcab2" )))
@@ -115,6 +125,6 @@ if (!(opt$org %in% c("hg18", "hg19", "hg38", "mm9","mm10", "rn5", "rn6", "dm3", 
 if (!is.numeric(opt$normto) || opt$normto<0)
 	stop("Fragment length must be a positive large integer!")
 	
-createSignalTracks(targets=opt$targets,org=opt$org,urlBase=opt$urlbase,stranded=opt$stranded,normTo=opt$normto,
+createSignalTracks(targets=targets,org=opt$org,urlBase=opt$urlbase,stranded=opt$stranded,normTo=opt$normto,
 	exportPath=opt$exportpath,hubInfo=list(name=opt$hubinfo_name,shortLabel=opt$hubinfo_sl,longLabel=opt$hubinfo_ll,
 	email=opt$hubinfo_email),overwrite=opt$overwrite,rc=opt$rc)	

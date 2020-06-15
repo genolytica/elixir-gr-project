@@ -1,0 +1,4 @@
+targets:
+  class: File
+  path:  ../example_data/targets.txt
+organism: hg19

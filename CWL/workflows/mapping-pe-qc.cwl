@@ -36,8 +36,6 @@ inputs:
     type: int?
   outdir:
     type: string?
-  fastq:
-    type: File[]
 
   #Cores
   cores_qc:
