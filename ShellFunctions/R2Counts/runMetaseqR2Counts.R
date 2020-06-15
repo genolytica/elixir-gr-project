@@ -2,8 +2,8 @@
 
 # Wrapper for the metaseqr2() function
 
-suppressPackageStartupMessages(library("optparse"))
-library(metaseqR2)
+suppressPackageStartupMessages(library(optparse))
+suppressPackageStartupMessages(library(metaseqR2))
 
 option_list <- list(
 	make_option(
@@ -153,7 +153,7 @@ option_list <- list(
 	),
 	make_option(
 		opt_str="--exonfltr",
-		action="store",
+		action="store_false",
 		default=TRUE,
 		help=paste0(
 			"The supported exon filter in the current version is minActiveExons which\n",
@@ -195,7 +195,7 @@ option_list <- list(
 	),
 	make_option(
 		opt_str="--genefltr",
-		action="store",
+		action="store_false",
 		default=TRUE,
 		help=paste0("Set genefltr=FALSE to NOT apply any gene filtering. To apply your own\n",
 			"filters parameters, change arguments:\n",
@@ -258,7 +258,7 @@ option_list <- list(
 	),
 	make_option(
 		opt_str="--genefltr3_expmedian",
-		action="store",
+		action="store_false",
 		default=TRUE,
 		help=paste0(
 			"Gene filter3: based on the overall expression of a gene. Genes below the median\n",
@@ -267,34 +267,34 @@ option_list <- list(
 	),
 	make_option(
 		opt_str="--genefltr3_expmean",
-		action="store",
+		action="store_true",
 		default=FALSE,
 		help=paste0(
 			"Gene filter3: based on the overall expression of a gene. Genes below the mean\n",
 			"of the overall count distribution are not accepted for further analysis. Defaults to FALSE."
 		)
 	),
-	make_option(
-		opt_str="--genefltr3_expquantile",
-		action="store",
-		default=NA,
-		help=paste0(
-			"Gene filter3: based on the overall expression of a gene. Genes below the specified\n",
-			"quantile of the total counts distribution are not accepted for further analysis."
-		)
-	),
-	make_option(
-		opt_str="--genefltr3_expknown",
-		action="store",
-		default=NA,
-		help=paste0(
-			"Gene filter3: based on the overall expression of a gene. A set of known not-expressed\n",
-			"genes in the system under investigation are used to estimate an expression cutoff.\n",
-			"The value of this filter is a character vector of HUGO gene symbols (MUST be contained\n",
-			"in the annotation, thus it's better to use annotation='download') whose counts are used\n",
-			"to build a 'null' expression distribution. The 90th quantile of this distribution is then."
-		)
-	),
+#	make_option(
+#		opt_str="--genefltr3_expquantile",
+#		action="store",
+#		default=NA,
+#		help=paste0(
+#			"Gene filter3: based on the overall expression of a gene. Genes below the specified\n",
+#			"quantile of the total counts distribution are not accepted for further analysis."
+#		)
+#	),
+#	make_option(
+#		opt_str="--genefltr3_expknown",
+#		action="store",
+#		default=NA,
+#		help=paste0(
+#			"Gene filter3: based on the overall expression of a gene. A set of known not-expressed\n",
+#			"genes in the system under investigation are used to estimate an expression cutoff.\n",
+#			"The value of this filter is a character vector of HUGO gene symbols (MUST be contained\n",
+#			"in the annotation, thus it's better to use annotation='download') whose counts are used\n",
+#			"to build a 'null' expression distribution. The 90th quantile of this distribution is then."
+#		)
+#	),
 #	make_option(
 #		opt_str="--genefltr4_biotype",
 #		action="store",
@@ -330,7 +330,7 @@ option_list <- list(
 	),
 	make_option(
 		opt_str="--genefltr5_percon",
-		action="store",
+		action="store_true",
 		default=FALSE,
 		help=paste0(
 			"Gene filter5: a gene is further considered for statistical testing if genefltr5_frac\n",
@@ -405,7 +405,7 @@ option_list <- list(
 	),
 	make_option(
 		opt_str="--outlist",
-		action="store",
+		action="store_true",
 		default=FALSE,
 		help=paste0(
 			"A logical controlling whether to export a list with the results\n",
