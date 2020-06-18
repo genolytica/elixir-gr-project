@@ -59,13 +59,12 @@ option_list <- list(
 	make_option(
 		opt_str="--exportpath",
 		action="store",
-		default=".",
+		default= ".",
 		help=" Path to export tracks."
 	),
 	make_option(
 		opt_str="--hubinfo_name",
 		action="store",
-		default="list",
 		help=paste0(
 			"Name of the track hub created in case of stranded tracks.\n",
 			"Please see the track hub specifications at the UCSC Genome Browser site."
@@ -74,7 +73,6 @@ option_list <- list(
 	make_option(
 		opt_str="--hubinfo_sl",
 		action="store",
-		default="list",
 		help=paste0(
 			"Short label for the track hub created in case of stranded tracks.\n",
 			"Please see the track hub specifications at the UCSC Genome Browser site."
@@ -83,7 +81,6 @@ option_list <- list(
 	make_option(
 		opt_str="--hubinfo_ll",
 		action="store",
-		default="list",
 		help=paste0(
 			"Long label for the track hub created in case of stranded tracks.\n",
 			"Please see the track hub specifications at the UCSC Genome Browser site."
@@ -92,7 +89,6 @@ option_list <- list(
 	make_option(
 		opt_str="--hubinfo_email",
 		action="store",
-		default="list",
 		help=paste0(
 			"Email associated with the track hub created in case of stranded tracks.\n",
 			"Please see the track hub specifications at the UCSC Genome Browser site."
@@ -113,8 +109,6 @@ option_list <- list(
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
-#print(opt$workdir)
-#list.files(getwd())
 
 targets <- readTargets(opt$targets, opt$path)
 
@@ -127,4 +121,4 @@ if (!is.numeric(opt$normto) || opt$normto<0)
 	
 createSignalTracks(targets=targets,org=opt$org,urlBase=opt$urlbase,stranded=opt$stranded,normTo=opt$normto,
 	exportPath=opt$exportpath,hubInfo=list(name=opt$hubinfo_name,shortLabel=opt$hubinfo_sl,longLabel=opt$hubinfo_ll,
-	email=opt$hubinfo_email),overwrite=opt$overwrite,rc=opt$rc)	
+	email=opt$hubinfo_email),overwrite=opt$overwrite,rc=opt$rc)

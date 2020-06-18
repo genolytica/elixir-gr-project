@@ -1,0 +1,14 @@
+targets:
+  class: File
+  path:  ../example_data/targets.txt
+organism: hg19
+contrast: con_vs_dox
+exonfltr: false
+genefltr: false
+counttype: exon
+normalization: edger
+statistics: edger
+figformat: png
+#xprtwhere: 
+#  class: Directory
+#  path: ../output

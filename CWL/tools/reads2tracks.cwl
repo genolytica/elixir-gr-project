@@ -21,7 +21,7 @@ inputs:
     inputBinding:
       position: 1
   path:
-    type: Directory
+    type: Directory?
     doc: "Path where all the BED/BAM files are placed"
     default:
       class: Directory
@@ -49,7 +49,6 @@ inputs:
       position: 5
   stranded:
     type: boolean?
-    default: false
     doc: "Separate + and - strands and create separate bigWig files"
     inputBinding:
       prefix: --stranded
@@ -92,7 +91,6 @@ inputs:
       position: 12
   overwrite:
     type: boolean?
-    default: false
     doc: "Overwrite tracks if they exist"
     inputBinding:
       prefix: --overwrite
