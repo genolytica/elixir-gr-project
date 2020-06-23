@@ -8,7 +8,7 @@ doc: |
 
 requirements:
   DockerRequirement:
-    dockerPull: "daphnelettos/metaseqr2:1.0"
+    dockerPull: "daphnelettos/metaseqr2:1.3"
 
 baseCommand: "Rscript"
 
@@ -21,7 +21,7 @@ inputs:
     inputBinding:
       position: 1
   path:
-    type: Directory?
+    type: Directory
     doc: "Path where all the BED/BAM files are placed"
     default:
       class: Directory
@@ -30,6 +30,28 @@ inputs:
       prefix: --path
       position: 2
   targets:
+#    type:
+#      type: record
+#      fields:
+#        sampleid:
+#          type: string[]
+#        fileid:
+#          type: string[]
+#        condition:
+#          type: string[]
+#        reads:
+#          type: string[]?
+#        stranded:
+#          type: string[]?
+#   type:
+#      type: array
+#     items: string[]
+#    type: 
+#      type: array
+#      items:
+#        type: array
+#        items: string
+#    type: Any
     type: File
     doc: "targets file"
     inputBinding:

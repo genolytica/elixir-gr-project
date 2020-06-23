@@ -8,4 +8,4 @@ statistics: edger,deseq
 figformat: png,tiff
 #xprtwhere: 
 #  class: Directory
-#  path: ../output/metaseqR2
+#  path: .

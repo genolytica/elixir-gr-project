@@ -8,7 +8,7 @@ doc: |
 
 requirements:
   DockerRequirement:
-    dockerPull: "daphnelettos/metaseqr2:1.1"
+    dockerPull: "daphnelettos/metaseqr2:1.3"
 
 baseCommand: "Rscript"
   
@@ -21,11 +21,34 @@ inputs:
     inputBinding:
       position: 1
   targets:
+#    type: Any
+#    type:
+#      type: array
+#      items: string[]
+#    type: 
+#      type: array
+#      items:
+#        type: array
+#        items: string
     type: File
-    doc: "targets file"
+    doc: "targets file equivalent"
     inputBinding:
       prefix: --samplelist
       position: 2
+#  targets:
+#    type:
+#      type: record
+#      fields:
+#        sampleid:
+#          type: string[]
+#        fileid:
+#          type: string[]
+#        condition:
+#          type: string[]
+#        reads:
+#          type: string[]?
+#        stranded:
+#          type: string[]?	  
   excludelist:
     type: File?
     doc: "A list of samples to exclude, in the same format as the input targets.txt"
@@ -483,22 +506,22 @@ inputs:
       position: 70
 
 outputs:
-#  data:
-#    type: File[]
-#    outputBinding:
-#      glob: "*.RData"
-#  javascript:
-#    type: File[]
-#    outputBinding:
-#      glob: "*.js"
+  data:
+    type: File[]
+    outputBinding:
+      glob: "*.RData"
+  javascript:
+    type: File[]
+    outputBinding:
+      glob: "*.js"
   results:
     type: Directory
     outputBinding:
-      glob: "metaseq*"  
-#  results:
-#    type: Directory?
-#    outputBinding:
-#      glob: $(inputs.xprtwhere)
+      glob: "*result*"
+  results2:
+    type: Directory?
+    outputBinding:
+      glob: $(inputs.xprtwhere)
 
 #Metadata
 $namespaces:

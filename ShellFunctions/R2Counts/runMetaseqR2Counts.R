@@ -795,10 +795,10 @@ if (opt$qcplots == "NULL"){
 figform.v <- unlist(strsplit(opt$figformat, split=","))
 
 # Outdir
-if  (!is.empty(opt$xprtwhere)){
-	path <- unlist(strsplit(opt$xprtwhere, split="/"))
-	xprtwhere <- file.path(path)
-}
+#if  (!is.empty(opt$xprtwhere)){
+#	path <- unlist(strsplit(opt$xprtwhere, split="/"))
+#xprtwhere <- file.path(tempdir(),opt$xprtwhere)
+#}
 
 # Create "export" VECTORS...
 xprtwhat.v <- unlist(strsplit(opt$xprtwhat, split=","))

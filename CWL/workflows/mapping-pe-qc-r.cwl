@@ -3,17 +3,22 @@
 cwlVersion: v1.0
 class: Workflow
 
-label: Complete Mapping and Quality Control pipeline for Paired-end data
+label: Complete Mapping and Quality Control pipeline for Paired-end data that also executes functions of the metaseqR2 package 
 doc: |
   A workflow which:
   i) Runs Hisat2 on each fastq pair while generating the fastq files containing unmapped reads 
   ii) Runs Bowtie2 using the --very-sensitive-local option, on the unmapped reads
   iii) A subworkflow is employed to prepare BAM files, corresponding to the 
-      unmapped-remaped reads, to be merged with the mapped reads form Hisat2
+       unmapped-remaped reads, to be merged with the mapped reads form Hisat2
   iv) After the merged BAMs are created, they are sorted and assigned a user defined 
-       name (according to samle identifier)
+      name (according to samle identifier)
   v) Corresponding index file for each sample is generated.
-  vi) At the same time it performs quality control over the FASTQ using fastqc and assembles the MultiQC report
+  vi) BAMs and index files are used to create bigWig files to be used for exploring RNA signal
+      in genome browsers
+  vii) Above files are also used to calculate counts (counts.RData object) and generate the
+       metaseqR2 html report
+  viii) At the same time it performs quality control over the FASTQ using fastqc and assembles
+        the MultiQC report
   
 requirements:
   ScatterFeatureRequirement: {}
@@ -101,7 +106,16 @@ inputs:
 
   # MetaseqR2 arguments
   targets:
-    type: File
+    type: File  
+#  targets:
+#    type: 
+#      type: array
+#      items:
+#        type: array
+#        items: string
+#  targets:
+#    type: array
+#	items: string[]
   path:
     type: Directory?  
   organism:
@@ -109,7 +123,9 @@ inputs:
   urlbase:
     type: string?
   stranded:
+    type: boolean?
   normto:
+    type: int?
   hubname:
     type: string?
   hubslbl:
@@ -293,6 +309,16 @@ outputs:
   final_bai:
     type: File[]
     outputSource: msi_wf/final_bai
+  tracks_txt:
+    type: File[]
+    outputSource: metaseqr2_tracks/tracks_output
+  bigwig_unstranded:
+    type: File[]
+    outputSource: metaseqr2_tracks/bigwig
+  bigwig_stranded:
+    type: Directory
+    outputSource: metaseqr2_tracks/bigwig2
+  
 
 steps:
   qc:
@@ -400,10 +426,10 @@ steps:
       exportpath: exportpath
       overwrite: overwrite
       rc: cores_metaseqr2
-     out: []
+    out: [tracks_output, bigwig, bigwig2]
       
   metaseqr2_counts:
-    run: ../tools/;redas2counts.cwl
+    run: ../tools/reads2counts.cwl
     in:
       targets: targets
       excludelist: excludelist

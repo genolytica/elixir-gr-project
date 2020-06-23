@@ -9,6 +9,7 @@ option_list <- list(
 	make_option(
 		opt_str="--path",
 		action="store",
+		default=NULL,
 		help="Directory where input files are located"
 	),
 	make_option(
@@ -109,9 +110,13 @@ option_list <- list(
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
-
-targets <- readTargets(opt$targets, opt$path)
-
+#print(opt$path)
+#print(file.path(getwd(),opt$path))
+#print(dirname(opt$targets))
+#print(opt$path)
+#print(list.files(opt$path))
+#print(list.files(dirname(opt$targets)))
+targets <- readTargets(opt$targets, path=opt$path)
 
 # TODO: more checks
 if (!(opt$org %in% c("hg18", "hg19", "hg38", "mm9","mm10", "rn5", "rn6", "dm3", "dm6", "danrer7","pantro4", "susscr3", "tair10", "equcab2" )))
