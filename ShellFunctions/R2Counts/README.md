@@ -1,11 +1,11 @@
 # generate-signal-tracks
 
-A shell script for obtaining rna-seq data counts.
+A shell script for obtaining rna-seq data counts and the metaseqR2 html report.
 
 ## Description
 
-This shell script ```runMetaseqR2Counts.R```, calls the metaseqr2() function
-of the metaseqR2 package.
+This shell script ```runMetaseqR2Counts.R```, after creating an appropriate targets file,
+calls the metaseqr2() function of the metaseqR2 package.
 The script can be invoked from the system shell instead of the R shell, using ```Rscript```.
 
 
@@ -17,18 +17,20 @@ The following packages are required to run the script:
 ## Basic Example
 ```
 Rscript run_metaseqR2.R \
-  --samplelist=my_targets.txt \
-  --contrast=A_vs_B \
-  --org=hg19 \
-  --counttype=exon \
-  --exonfltr \                                        #Sets filter to FALSE
-  --normalization=edger \
-  --statistics=deseq,edger \
-  --figformat=png,pdf \
-  --xprtwhere=. \
-  --xprtwhat=adj_p_value,fold_change
-  --xprtscale=natural,log2
-  --rc=0.5 
+	--samples=sample1,sample2,sample3,sample4 \
+	--files=sample1.bam,sample2.bam,sample3.bam,sample4.bam \
+	--conditions=control,control,treatment,treatment \
+	--contrast=A_vs_B \
+	--org=hg19 \
+	--counttype=exon \
+	--exonfltr \                                        #Sets filter to FALSE
+	--normalization=edger \
+	--statistics=deseq,edger \
+	--figformat=png,pdf \
+	--xprtwhere=. \
+	--xprtwhat=adj_p_value,fold_change
+	--xprtscale=natural,log2
+	--rc=0.5 
 ```
 
 ## List of arguments
@@ -37,17 +39,22 @@ The following table presents the input arguments in detail:
 
 |Parameter              |Description                                                                                                                                          |
 |-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+|samples             |Sample IDs - Enter as comma-separated list (no space).|
+|files               |File names - Enter as comma-separated list (no space).|
+|condition           |Sample Conditions - Enter as comma-separated list (no space).|
+|paired              |Should be "single" for single-end reads, "paired" for paired-end reads or "mixed" for BAMs that contain both single- and paired-end reads. If this column is not provided, single-end reads will be assumed. Enter as comma-separated list (no space).|
+|strandp             |Should be "forward" for a forward (5'->3') strand library construction protocol, "reverse" for a reverse (3'->5') strand library construction protocol, or "no" for unstranded/unknown protocol. If this column is not provided, unstranded reads will be assumed. Enter as comma-separated list (no space).|
 |samplelist             |A small tab-delimited file with the experiment description. The first line of the external tab delimited file should contain column names (names are not important). The first column MUST contain UNIQUE sample names. The second column MUST contain the raw BAM/BED files WITH their full path. Alternatively, the path argument should be provided. If path is not provided and if the files in the second column of the targets file do not contain a path to a directory, the current directory is assumed to be the BAM/BED file container. The third column MUST contain the biological condition where each of the samples in the first column should belong to.|
 |excludelist            |A list of samples to exclude, in the same (list) format as sampleList above.|
-|path                   |An optional path where all the BED/BAM files are placed, to be prepended to the BAM/BED file names in the targets file.|
+|path                   |Directory where input files are located and where the targets.txt file will be created.|
 |filetype               |The type of raw input files. It can be "auto" for auto-guessing, "bed" for BED files, "sam" for SAM files or "bam" for BAM files.|
 |contrast               |A character vector of contrasts to be tested in the statistical testing step(s) of the pipeline. Each element of contrast should STRICTLY have the format "ConditionA_vs_ConditionB_vs_...". Special attention is needed as fold change calculations are based on this argument.|
 |libsizelist            |An optional named list where names represent samples (MUST be the same as the samples in the input targets.txt in samplelist) and members are the library sizes (sequencing depth) for each sample.|
-|idcol                  |Integer denoting the column number in the file (or data frame) provided with the counts argument, where the unique gene accessions are. Default to 4 which is the standard feature name column in a BED file.|
+|idcol                   |Integer denoting the column number in the file (or data frame) provided with the counts argument, where the unique gene accessions are. Default to 4 which is the standard feature name column in a BED file.|
 |gccol                  |Integer denoting the column number in the file (or data frame) provided with the counts argument, where each gene's GC content is given. If not provided, GC content normalization provided by EDASeq will not be available.|
-|namecol                |Integer denoting the column number in the file (or data frame) provided with the counts argument, where the HUGO gene symbols are given. If not provided, it will not be available when reporting results. In addition, the 'known' gene filter will not be available for application.|
-|btcol                  |Integer denoting the column number in the file (or data frame) provided with the counts argument, where the gene biotypes are given. If not provided, the 'biodetection', 'countsbio', 'saturation', 'filtered' and 'biodist' plots will not be available.|
-|annotation             |It can be one of i) NULL (default) to use the existing annotation database or fetch on the fly ii) 'embedded' if the annotation elements are embedded in the read counts file (restrictions apply) iii) a list with a path to a GTF file and certain required metadata.|
+|namecol             |Integer denoting the column number in the file (or data frame) provided with the counts argument, where the HUGO gene symbols are given. If not provided, it will not be available when reporting results. In addition, the 'known' gene filter will not be available for application.|
+|btcol                   |Integer denoting the column number in the file (or data frame) provided with the counts argument, where the gene biotypes are given. If not provided, the 'biodetection', 'countsbio', 'saturation', 'filtered' and 'biodist' plots will not be available.|
+|annotation          |It can be one of i) NULL (default) to use the existing annotation database or fetch on the fly ii) 'embedded' if the annotation elements are embedded in the read counts file (restrictions apply) iii) a list with a path to a GTF file and certain required metadata.|
 |org                    |For human genomes "hg18", "hg19" or "hg38", for mouse genomes "mm9", "mm10", for rat genomes "rn5" or "rn6", for drosophila genome "dm3" or "dm6", for zebrafish genome "danrer7", "danrer10" or "danrer11", for chimpanzee genome "pantro4", "pantro5", for pig genome "susscr3", "susscr11", for Arabidopsis thaliana genome "tair10" and for Equus caballus genome "equcab2".|
 |refdb                  |The reference annotation repository from which to retrieve annotation elements to use with metaseqr2. It can be one of "ensembl" (default), "ucsc" or "refseq" or a user based one (similar to the org argument).|
 |version                |An integer denoting the version of the annotation to use from the local annotation database or fetch on the fly. For Ensembl, it corresponds to Ensembl releases, while for UCSC/RefSeq, it is the date of creation (locally). Defaults to "auto".|
@@ -74,17 +81,17 @@ The following table presents the input arguments in detail:
 |genefltr5_percon       |Gene filter5: a gene is further considered for statistical testing if genefltr5_frac (x100 for a percentage value) have more than genefltr5_mincount reads across all samples (genefltr5_percon=FALSE) or across the samples of each condition (genefltr5_percon=TRUE). Defaults to FALSE. Use argument flag to set as TRUE.|
 |whenApplyFilter        |A character string determining when to apply the exon and/or gene filters, relative to normalization. It can be "prenorm" to apply the filters and exclude genes from further processing before normalization, or "postnorm" to apply the filters after normalization (default)."|
 |normalization          |A normalization algorithm to be applied on the count data. It can be one of "edaseq" for EDASeq normalization, "deseq" for the normalization algorithm in the DESq package (default), "edger" for the normalization algorithms present in the edgeR package "noiseq" for the normalization algorithms present in the NOISeq package "nbpseq" for the normalization algorithms present in the NBPSeq package or "none" to not normalize the data (highly unrecommended). Algorithm specific arguments can be passed through the normArgs argument).|
-|normargs               |A named list whose names are the names of the normalization algorithm parameters and its members parameter values. Leave NULL for the defaults of normalization.|
+|normargs                 |A named list whose names are the names of the normalization algorithm parameters and its members parameter values. Leave NULL for the defaults of normalization.|
 |statistics             |One or more statistical analyses to be performed by the metaseqr2 pipeline. It can be one or more of 'deseq' (default), "deseq2", "edger", "noiseq", "bayseq", "limma", "nbpseq", "absseq", "dss". Enter as comma-separated list (no spaces).|
 |statargs               |A named list whose names are the names of the statistical algorithms used in the pipeline. Each member is another named list whose names are the algorithm parameters and its members are the parameter values. Leave NULL for the defaults of statistics.|     
-|adjmethod              |The multiple testing p-value adjustment method. It can be one of p.adjust.methods or 'qvalue' from the qvalue Bioconductor package. Defaults to 'BH' for Benjamini-Hochberg correction.|
-|metap                  |The meta-analysis method to combine p-values from multiple statistical tests. It can be one of 'simes'(default), 'bonferroni', 'minp', 'maxp', 'weight, 'pandora', 'dperm_min', 'dperm_max', 'dperm_weight', 'fisher', 'fperm', 'whitlock' or 'none'.|
-|weight                 |A vector of weights with the same length as the statistics vector containing a weight for each statistical test. It should sum to 1.|
-|nperm                  |The number of permutations performed to derive the meta p-value when metap='fperm' or metaP='dperm'. It defaults to 10000.|
-|pcut                   |A p-value cutoff for exporting differentially genes, default is to export all the non-filtered genes.|
-|logoffset              |An offset to be added to values during logarithmic transformations in order to avoid Infinity (default is 1).|
-|poffset                |A value between 0 and 1 to multiply potential zero p-values with for the combination methods including weighting or NULL (default).|
-|preset                 |An analysis strictness preset. preset can be one of 'all_basic', 'all_normal', 'all_full', 'medium_basic', 'medium_normal', 'medium_full', 'strict_basic', 'strict_normal' or 'strict_full', each of which control the strictness of the analysis and the amount of data to be exported.|
+|adjmethod          |The multiple testing p-value adjustment method. It can be one of p.adjust.methods or 'qvalue' from the qvalue Bioconductor package. Defaults to 'BH' for Benjamini-Hochberg correction.|
+|metap                 |The meta-analysis method to combine p-values from multiple statistical tests. It can be one of 'simes'(default), 'bonferroni', 'minp', 'maxp', 'weight, 'pandora', 'dperm_min', 'dperm_max', 'dperm_weight', 'fisher', 'fperm', 'whitlock' or 'none'.|
+|weight                  |A vector of weights with the same length as the statistics vector containing a weight for each statistical test. It should sum to 1.|
+|nperm                |The number of permutations performed to derive the meta p-value when metap='fperm' or metaP='dperm'. It defaults to 10000.|
+|pcut                    |A p-value cutoff for exporting differentially genes, default is to export all the non-filtered genes.|
+|logoffset               |An offset to be added to values during logarithmic transformations in order to avoid Infinity (default is 1).|
+|poffset                 |A value between 0 and 1 to multiply potential zero p-values with for the combination methods including weighting or NULL (default).|
+|preset                  |An analysis strictness preset. preset can be one of 'all_basic', 'all_normal', 'all_full', 'medium_basic', 'medium_normal', 'medium_full', 'strict_basic', 'strict_normal' or 'strict_full', each of which control the strictness of the analysis and the amount of data to be exported.|
 |qcplots                |A set of diagnostic plots to show/create. It can be one or more of 'mds', 'biodetection', 'rnacomp', 'countsbio', 'saturation', 'readnoise', 'filtered', 'boxplot', 'gcbias', 'lengthbias', 'meandiff', 'meanvar', 'deheatmap', 'volcano', 'mastat', 'biodist', 'statvenn', 'foldvenn'. Enter as comma-separated list OR set as NULL for no diagnostic plots to be created. Enter as comma-separated list (no spaces).|
 |figformat              |The format of the output diagnostic plots. It can be one or more of "png", "jpg", "tiff", "bmp", "pdf", "ps". The native format "x11" (for direct display) is not provided as an option as it may not render the proper display of some diagnostic plots in some devices. Enter as comma-separated list (no spaces).|
 |outlist                |A logical controlling whether to export a list with the results in the running environment. Defaults to FALSE. Use argument flag to set as TRUE.|
