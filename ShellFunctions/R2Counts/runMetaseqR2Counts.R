@@ -798,7 +798,7 @@ targets <- data.frame(samplename=samplenames.v,
 targets <- t(na.omit(t(targets)))
 
 write.table(targets,file=file.path(opt$path,"targets.txt"),sep="\t",row.names=FALSE,quote=FALSE)
-
+#write.table(targets,file="targetsT.txt",sep="\t",row.names=FALSE,quote=FALSE)
 
 # Check if version is numeric or "auto"
 if (opt$version!="auto"){
@@ -852,6 +852,12 @@ if (opt$qcplots == "NULL"){
 
 # Figure Formats -> VECTOR
 figform.v <- unlist(strsplit(opt$figformat, split=","))
+
+# Outdir
+#if  (!is.empty(opt$xprtwhere)){
+#	path <- unlist(strsplit(opt$xprtwhere, split="/"))
+#xprtwhere <- file.path(tempdir(),opt$xprtwhere)
+#}
 
 # Create "export" VECTORS...
 xprtwhat.v <- unlist(strsplit(opt$xprtwhat, split=","))

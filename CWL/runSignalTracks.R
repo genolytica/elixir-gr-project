@@ -7,14 +7,46 @@ suppressPackageStartupMessages(library(metaseqR2))
 
 option_list <- list(
 	make_option(
-		opt_str="--path",
+		opt_str="--samples",
 		action="store",
-		help="Directory where input files are located"
+		help="Sample IDs - Enter as comma-separated list (no space)."
 	),
 	make_option(
-		opt_str="--targets",
+		opt_str="--files",
 		action="store",
-		help="A tab-delimited file with the experimental description"
+		help="File names - Enter as comma-separated list (no space)."
+	),
+	make_option(
+		opt_str="--conditions",
+		action="store",
+		help="Sample Conditions - Enter as comma-separated list (no space)."
+	),
+	make_option(
+		opt_str="--paired",
+		action="store",
+		default=NULL,
+		help=paste0(
+			"'single' for single-end reads, 'paired' for paired-end reads or 'mixed' for BAMs\n",
+			"that contain both single- and paired-end reads. If this column is not provided,\n",
+			"single-end reads will be assumed. - Enter as comma-separated list (no space)."
+		)
+	),
+	make_option(
+		opt_str="--strandp",
+		action="store",
+		default=NULL,
+		help=paste0(
+			"'forward' for a forward (5'->3') strand library construction protocol,\n",
+			"'reverse' for a reverse (3'->5') strand library construction protocol, or\n",
+			"'no' for unstranded/unknown protocol. If this column is not provided,\n",
+			"unstranded reads will be assumed - Enter as comma-separated list (no space)."
+		)
+	),
+	make_option(
+		opt_str="--path",
+		action="store",
+#		default=NULL,
+		help="Directory where input files are located"
 	),
 	make_option(
 		opt_str="--org",
@@ -106,19 +138,45 @@ option_list <- list(
 		default=NULL,
 		help="Fraction of cores to use"
 	)
+#	make_option(
+#		opt_str="--targets",
+#		action="store",
+#		help="Does a file array of BAMs exist"
+#	)
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
 
-targets <- readTargets(opt$targets, opt$path)
+#Create targets file
+samplenames.v <- unlist(strsplit(opt$samples, split=","))
+filenames.v <- unlist(strsplit(opt$files, split=","))
+conditions.v <- unlist(strsplit(opt$conditions, split=","))
 
+if (!is.null(opt$paired)){
+  paired.v <- unlist(strsplit(opt$paired, split=","))
+}else{paired.v <- rep(NA,times=length(samplenames.v))}
+if (!is.null(opt$strandp)){
+  stranded.v <- unlist(strsplit(opt$strandp, split=","))
+}else{stranded.v <- rep(NA,times=length(samplenames.v))}
+
+targets <- data.frame(samplename=samplenames.v,
+  filename=filenames.v,
+  condition=conditions.v,
+  paired=paired.v,
+  stranded=stranded.v)
+  
+targets <- t(na.omit(t(targets)))
+
+write.table(targets,file=file.path(opt$path,"targets.txt"),sep="\t",row.names=FALSE,quote=FALSE)
 
 # TODO: more checks
 if (!(opt$org %in% c("hg18", "hg19", "hg38", "mm9","mm10", "rn5", "rn6", "dm3", "dm6", "danrer7","pantro4", "susscr3", "tair10", "equcab2" )))
 	stop("The organism must be one of \"hg18\", \"hg19\", \"hg38\", \"mm9\",\"mm10\", \"rn5\", \"rn6\", \"dm3\", \"dm6\", \"danrer7\",\"pantro4\", \"susscr3\", \"tair10\", \"equcab2\"!")
 if (!is.numeric(opt$normto) || opt$normto<0)
 	stop("Fragment length must be a positive large integer!")
+
+targetsF <- readTargets(file.path(opt$path,"targets.txt"), path=opt$path)
 	
-createSignalTracks(targets=targets,org=opt$org,urlBase=opt$urlbase,stranded=opt$stranded,normTo=opt$normto,
+createSignalTracks(targets=targetsF,org=opt$org,urlBase=opt$urlbase,stranded=opt$stranded,normTo=opt$normto,
 	exportPath=opt$exportpath,hubInfo=list(name=opt$hubinfo_name,shortLabel=opt$hubinfo_sl,longLabel=opt$hubinfo_ll,
 	email=opt$hubinfo_email),overwrite=opt$overwrite,rc=opt$rc)

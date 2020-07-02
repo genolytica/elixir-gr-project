@@ -36,6 +36,9 @@ outputs:
   final_bai:
     type: File[]
     outputSource: samtools_index/output_index
+  connector:
+    type: File
+    outputSource: connect_targets/temp
 
 steps:
   samtools_merge:
@@ -66,6 +69,25 @@ steps:
       cores: cores
       input_bam: samtools_sort/output_sorted
     out: [output_index]
+
+  connect_targets:
+    in: []
+    run:
+      class: CommandLineTool
+      requirements:
+        InlineJavascriptRequirement: {}
+        ShellCommandRequirement: {}
+      baseCommand: [touch, temp.txt]
+      inputs:
+        outputName:
+          type: string
+          default: temp.txt
+      outputs:
+        temp:
+          type: File
+          outputBinding:
+            glob: "temp.txt"
+    out: [temp]
 
 # Metadata
 $namespaces:

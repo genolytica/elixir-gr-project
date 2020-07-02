@@ -12,7 +12,7 @@ The following table describes the structure of the repository.
 |workflows|CWL descriptions for SeqCVIBE workflows (class ```Workflow```) that implement various analytical steps as well as complete workflows. See the documentation (```doc``` field) inside each workflow|
 |jobs|YAML file examples that provide the inputs to individual command line tools instances or complete workflows. Files are named according to the respective CWL workflow with the ```-job.yml``` suffix|
 |example_data|Toy data required for testing the workflows|
-|reference|Directory where the reference genome should be put. See the ```README.md``` inside that directory|
+|indices|Directory where HISAT2 and BOWTIE2 indices should be put. See the ```README.md``` inside that directory|
 
 ## How to run locally
 
@@ -37,10 +37,18 @@ environment created for CWL:
 
 ### Single tools
 
-Make a directory to place the output
+Make a directory to place the output 
 
 ```
 $ mkdir output
+```
+and inside this directory, the specific directories for the metaseqR2 results
+
+```
+$ mkdir metaseqR2_results
+```
+```
+$ mkdir signal_tracks
 ```
 
 Run some tests for single tools (class ```CommandLineTool```)
@@ -66,11 +74,18 @@ $ cwl-runner --outdir ./output \
     ./tools/samtools-view.cwl ./jobs/samtools-view-convert.yml
 ```
 
-4\. Run metaseqR2 to get read counts | signal tracks
+4\. Run metaseqR2 to get signal tracks (unstranded)
 
 ```
 $ cwl-runner --outdir ./output \
-    
+    ./tools/reads2tracks.cwl ./jobs/r2t-job.yml
+```
+
+5\. Run metaseqR2 to get read counts and the metaseqR2 html report
+
+```
+$ cwl-runner --outdir ./output \
+     ./tools/reads2counts.cwl ./jobs/r2c-job.yml   
 ```
 
 ### Workflows
@@ -95,5 +110,5 @@ $ cwl-runner --outdir ./output \
 
 ```
 $ cwl-runner --outdir ./output \
-    ./workflows/ ./jobs/
+    ./workflows/mapping-pe-qc-r.cwl ./jobs/mapping-pe-qc-r-job.yml
 ```

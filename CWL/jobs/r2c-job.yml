@@ -1,6 +1,6 @@
-targets:
-  class: File
-  path:  ../example_data/targets.txt
+samples: con1,con2,dox1,dox2
+files: con1_sub.bam,con2_sub.bam,dox1_sub.bam,dox2_sub.bam
+conditions: con,con,dox,dox
 organism: hg19
 contrast: con_vs_dox
 exonfltr: false
@@ -8,7 +8,9 @@ genefltr: false
 counttype: exon
 normalization: edger
 statistics: edger
+qcplots: mds
 figformat: png
-#xprtwhere: 
-#  class: Directory
-#  path: ../output
+path:
+  class: Directory
+  path: ../example_data
+

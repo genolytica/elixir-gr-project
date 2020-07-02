@@ -11,9 +11,9 @@ doc: |
   iii) A subworkflow is employed to prepare BAM files, corresponding to the 
       unmapped-remaped reads, to be merged with the mapped reads form Hisat2
   iv) After the merged BAMs are created, they are sorted and assigned a user defined 
-       name (samle identifier)
+       name (sample identifier)
   v) Corresponding index file for each sample is generated.
-  vi) BAMs and index files are used to create bigWig files to be used for exploring RNA signal
+  vi) BAMs and index files are used to create bigWig files, to be used for exploring RNA signal
       in genome browsers
   vii) Above files are also used to calculate counts (counts.RData object) and generate the
        metaseqR2 html report
@@ -24,6 +24,7 @@ requirements:
   ScatterFeatureRequirement: {}
   SubworkflowFeatureRequirement: {}
   StepInputExpressionRequirement: {}
+  InlineJavascriptRequirement: {}
   MultipleInputFeatureRequirement: {}
   
 inputs:
@@ -41,7 +42,7 @@ inputs:
   cores_qc:
     type: int?
   cores_metaseqr2
-    type: int?
+    type: float?
 	
   # HISAT2 alignment
   add_chr:
@@ -92,16 +93,18 @@ inputs:
     type: string[] 
 	
   # MetaseqR2 arguments
-  targets:
-    type: File  
-#  targets:
-#    type: 
-#      type: array
-#      items:
-#        type: array
-#        items: string
+  samples:
+    type: string
+  files:
+    type: string
+  conditions:
+    type: string
+  paired:
+    type: string?
+  strandp:
+    type: string?
   path:
-    type: Directory?  
+    type: Directory  
   organism:
     type: string
   urlbase:
@@ -118,8 +121,8 @@ inputs:
     type: string?
   hubmail:
     type: string?
-  exportpath:
-    type: Directory?
+#  exportpath:
+#    type: Directory?
   overwrite:
     type: boolean?
   excludelist:
@@ -148,11 +151,11 @@ inputs:
     type: string?
   counttype:
     type: string
-  utrOpts_frac:
+  utropts_frac:
     type: float?  
-  utrOpts_minlen:
+  utropts_minlen:
     type: int?
-  utrOpts_dnstrm:
+  utropts_dnstrm:
     type: int?
   exonfltr:
     type: boolean?  
@@ -218,8 +221,8 @@ inputs:
     type: string?
   outlist:
     type: boolean?
-  xprtwhere:
-    type: Directory?
+#  xprtwhere:
+#    type: Directory?
   xprtwhat:
     type: string?
   xprtscale:
@@ -290,15 +293,16 @@ outputs:
   final_bai:
     type: File[]
     outputSource: msi_wf/final_bai
-  tracks_txt:
-    type: File[]
-    outputSource: metaseqr2_tracks/tracks_output
-  bigwig_unstranded:
-    type: File[]
-    outputSource: metaseqr2_tracks/bigwig
-  bigwig_stranded:
-    type: Directory
-    outputSource: metaseqr2_tracks/bigwig2
+  signal_tracks:
+    type:
+      type: array
+      items: [File, Directory]
+    outputSource: metaseqr2_tracks/results
+  metaseqr2_results:
+    type:
+      type: array
+      items: [File, Directory]
+    outputSource: metaseqr2_counts/results
 
 steps:
   qc:
@@ -385,7 +389,11 @@ steps:
   metaseqr2_tracks:
     run: ../tools/reads2tracks.cwl
     in:
-      targets: targets
+      samples: samples
+      files: files
+      conditions: conditions
+      paired: paired
+      strandp: strandp
       organism: organism
       path: path
       urlbase: urlbase
@@ -395,15 +403,19 @@ steps:
       hubslbl: hubslbl
       hubllbl: hubllbl
       hubmail: hubmail
-      exportpath: exportpath
+#      exportpath: exportpath
       overwrite: overwrite
       rc: cores_metaseqr2
-    out: [tracks_output, bigwig, bigwig2]
+    out: [results]
       
   metaseqr2_counts:
-    run: ../tools/;redas2counts.cwl
+    run: ../tools/reads2counts.cwl
     in:
-      targets: targets
+      samples: samples
+      files: files
+      conditions: conditions
+      paired: paired
+      strandp: strandp
       excludelist: excludelist
       path: path
       filetype: filetype
@@ -414,14 +426,14 @@ steps:
       namecol: namecol
       btcol: btcol
       annotation: annotation
-      org: organism
+      organism: organism
       refdb: refdb
       version: version
       translevel: translevel
       counttype: counttype
-      utrOpts_frac  : utrOpts_frac
-      utrOpts_minlen: utrOpts_minlen
-      utrOpts_dnstrm: utrOpts_dnstrm
+      utropts_frac  : utropts_frac
+      utropts_minlen: utropts_minlen
+      utropts_dnstrm: utropts_dnstrm
       exonfltr: exonfltr
       exonfltr_exonsprgene: exonfltr_exonsprgene
       exonfltr_minexons: exonfltr_minexons
@@ -454,7 +466,7 @@ steps:
       qcplots: qcplots
       figformat: figformat
       outlist: outlist
-      xprtwhere: xprtwhere
+ #     xprtwhere: xprtwhere
       xprtwhat: xprtwhat
       xprtscale: xprtscale
       xprtvalues: xprtvalues
@@ -472,7 +484,7 @@ steps:
       progressfun: progressfun
       offlinereport: offlinereport
       exportr2c: exportr2c
-    out: []
+    out: [results]
 
 # Metadata
 $namespaces:

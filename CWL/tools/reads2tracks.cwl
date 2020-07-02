@@ -9,12 +9,19 @@ doc: |
 requirements:
   DockerRequirement:
     dockerPull: "daphnelettos/metaseqr2:1.3"
+  InlineJavascriptRequirement: {}
+  InitialWorkDirRequirement:
+    listing:
+      - entry: $(inputs.path)
+        writable: true
+      - entry: $(inputs.exportpath)
+        writable: true
 
 baseCommand: "Rscript"
 
 inputs:
   script:
-    type: File
+    type: File?
     default:
       class: File
       path: ../runSignalTracks.R
@@ -23,121 +30,123 @@ inputs:
   path:
     type: Directory
     doc: "Path where all the BED/BAM files are placed"
-    default:
-      class: Directory
-      path: ../example_data
     inputBinding:
       prefix: --path
       position: 2
-  targets:
-#    type:
-#      type: record
-#      fields:
-#        sampleid:
-#          type: string[]
-#        fileid:
-#          type: string[]
-#        condition:
-#          type: string[]
-#        reads:
-#          type: string[]?
-#        stranded:
-#          type: string[]?
-#   type:
-#      type: array
-#     items: string[]
-#    type: 
-#      type: array
-#      items:
-#        type: array
-#        items: string
-#    type: Any
-    type: File
-    doc: "targets file"
+  samples:
+    type: string
+    doc: "Sample IDs - Enter as comma-separated list (no space)."
     inputBinding:
-      prefix: --targets
+      prefix: --samples
       position: 3
+  files:
+    type: string
+    doc: "File names - Enter as comma-separated list (no space)."
+    inputBinding:
+      prefix: --files
+      position: 4
+  conditions:
+    type: string
+    doc: "Sample conditions - Enter as comma-separated list (no space)."
+    inputBinding:
+      prefix: --conditions
+      position: 5
+  paired:
+    type: string?
+    doc: "Paired or single-end reads. Enter as comma-separated list (no space)."
+    inputBinding:
+      prefix: --paired
+      position: 6
+  strandp:
+    type: string?
+    doc: "Strand library construction protocol. Enter as comma-separated list (no space)."
+    inputBinding:
+      prefix: --strandp
+      position: 7
+#  targets:
+#    type: File?
+#    doc: "File array where BED/BAM files are placed"
+#    inputBinding:
+#      prefix: --targets
+#      position: 8
   organism:
     type: string
     doc: "organism annotation"
     inputBinding:
       prefix: --org
-      position: 4
+      position: 9
   urlbase:
     type: string?
     doc: "A valid URL which is prepended to the created bigWig files"
     inputBinding:
       prefix: --urlbase
-      position: 5
+      position: 10
   stranded:
     type: boolean?
     doc: "Separate + and - strands and create separate bigWig files"
     inputBinding:
       prefix: --stranded
-      position: 6
+      position: 11
   normto:
     type: int?
     doc: "sum of signal for normalization"
     inputBinding:
       prefix: --normto
-      position: 7
+      position: 12
   exportpath:
     type: Directory?
     doc: "Path to export tracks"
+    default:
+      class: Directory
+      path: ../output/signal_tracks
     inputBinding:
       prefix: --exportpath
-      position: 8
+      position: 13
   hubname:
     type: string?
     doc: "Name of the track hub created in case of stranded tracks"
     inputBinding:
       prefix: --hubinfo_name
-      position: 9
+      position: 14
   hubslbl:
     type: string?
     doc: "Short label for the track hub created in case of stranded tracks"
     inputBinding:
       prefix: --hubinfo_sl
-      position: 10
+      position: 15
   hubllbl:
     type: string?
     doc: "Long label for the track hub created in case of stranded tracks"
     inputBinding:
       prefix: --hubinfo_ll
-      position: 11
+      position: 16
   hubmail:
     type: string?
     doc: "Email associated with the track hub created in case of stranded tracks"
     inputBinding:
       prefix: --hubinfo_email
-      position: 12
+      position: 17
   overwrite:
     type: boolean?
     doc: "Overwrite tracks if they exist"
     inputBinding:
       prefix: --overwrite
-      position: 13
+      position: 18
   rc:
-    type: int?
+    type: float?
     doc: "Fraction of cores to use"
     inputBinding:
       prefix: --rc
-      position: 14
+      position: 19
 
 outputs:
-  tracks_output:
-    type: File[]
+  results:
+    type:
+      type: array
+      items: [File, Directory]
     outputBinding:
-      glob: "*.txt"
-  bigwig:
-    type: File[]
-    doc: "BigWig Files"
-    outputBinding:
-      glob: "*.bigWig"
-  bigwig2:
-    type: Directory?
-    outputBinding:
-      glob: $(inputs.organism)
+      glob: $(inputs.exportpath.basename)
+
 
 #Metadata
 $namespaces:

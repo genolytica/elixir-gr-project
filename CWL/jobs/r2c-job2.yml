@@ -1,11 +1,13 @@
-targets:
-  class: File
-  path:  ../example_data/targets.txt
+samples: con1,con2,dox1,dox2
+files: con1_sub.bam,con2_sub.bam,dox1_sub.bam,dox2_sub.bam
+conditions: con,con,dox,dox
 organism: hg19
 contrast: con_vs_dox
 counttype: exon
+qcplots: mds
 statistics: edger,deseq
 figformat: png,tiff
-#xprtwhere: 
-#  class: Directory
-#  path: .
+path:
+  class: Directory
+  path: ../example_data
+

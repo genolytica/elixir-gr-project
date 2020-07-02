@@ -6,6 +6,42 @@ suppressPackageStartupMessages(library(optparse))
 suppressPackageStartupMessages(library(metaseqR2))
 
 option_list <- list(
+	make_option(
+		opt_str="--samples",
+		action="store",
+		help="Sample IDs - Enter as comma-separated list (no space)."
+	),
+	make_option(
+		opt_str="--files",
+		action="store",
+		help="File names - Enter as comma-separated list (no space)."
+	),
+	make_option(
+		opt_str="--conditions",
+		action="store",
+		help="Sample Conditions - Enter as comma-separated list (no space)."
+	),
+	make_option(
+		opt_str="--paired",
+		action="store",
+		default=NULL,
+		help=paste0(
+			"'single' for single-end reads, 'paired' for paired-end reads or 'mixed' for BAMs\n",
+			"that contain both single- and paired-end reads. If this column is not provided,\n",
+			"single-end reads will be assumed. - Enter as comma-separated list (no space)."
+		)
+	),
+	make_option(
+		opt_str="--strandp",
+		action="store",
+		default=NULL,
+		help=paste0(
+			"'forward' for a forward (5'->3') strand library construction protocol,\n",
+			"'reverse' for a reverse (3'->5') strand library construction protocol, or\n",
+			"'no' for unstranded/unknown protocol. If this column is not provided,\n",
+			"unstranded reads will be assumed - Enter as comma-separated list (no space)."
+		)
+	),
 #	make_option(
 #		opt_str="--counts",
 #		action="store",
@@ -19,22 +55,22 @@ option_list <- list(
 #			"iv) counts can be a list representing the gene model."
 #		)
 #	),
-	make_option(
-		opt_str="--samplelist",
-		action="store",
-		help=paste0(
-			"A tab-delimited file with the experimental description.\n",
-			"The file should be text tab-delimited and structured as follows:\n",
-			"the first line of the external tab delimited file should contain\n",
-			"column names (names are not important). The first column MUST contain\n",
-			"UNIQUE sample names. The second column MUST contain the raw BAM/BED files\n",
-			"WITH their full path. Alternatively, the path argument should be provided.\n",
-			"If path is not provided and if the files in the second column of the targets\n",
-			"file do not contain a path to a directory, the current directory is assumed\n",
-			"to be the BAM/BED file container. The third column MUST contain the biological\n",
-			"condition where each of the samples in the first column should belong to."
-		)	
-	),
+#	make_option(
+#		opt_str="--samplelist",
+#		action="store",
+#		help=paste0(
+#			"A tab-delimited file with the experimental description.\n",
+#			"The file should be text tab-delimited and structured as follows:\n",
+#			"the first line of the external tab delimited file should contain\n",
+#			"column names (names are not important). The first column MUST contain\n",
+#			"UNIQUE sample names. The second column MUST contain the raw BAM/BED files\n",
+#			"WITH their full path. Alternatively, the path argument should be provided.\n",
+#			"If path is not provided and if the files in the second column of the targets\n",
+#			"file do not contain a path to a directory, the current directory is assumed\n",
+#			"to be the BAM/BED file container. The third column MUST contain the biological\n",
+#			"condition where each of the samples in the first column should belong to."
+#		)	
+#	),
 	make_option(
 		opt_str="--excludelist",
 		action="store",
@@ -44,7 +80,7 @@ option_list <- list(
 	make_option(
 		opt_str="--path",
 		action="store",
-		default=NULL,
+#		default=NULL,
 		help=paste0(
 			"An optional path where all the BED/BAM files are placed,\n",
 			"to be prepended to the BAM/BED file names in the targets file."
@@ -737,9 +773,37 @@ option_list <- list(
 			"Defaults to TRUE."
 		)
 	)
+#	make_option(
+#		opt_str="--targets",
+#		action="store",
+#		help="Does a file array of BAMs exist"
+#	)
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
+
+#Create targets file
+samplenames.v <- unlist(strsplit(opt$samples, split=","))
+filenames.v <- unlist(strsplit(opt$files, split=","))
+conditions.v <- unlist(strsplit(opt$conditions, split=","))
+
+if (!is.null(opt$paired)){
+  paired.v <- unlist(strsplit(opt$paired, split=","))
+}else{paired.v <- rep(NA,times=length(samplenames.v))}
+if (!is.null(opt$strandp)){
+  stranded.v <- unlist(strsplit(opt$strandp, split=","))
+}else{stranded.v <- rep(NA,times=length(samplenames.v))}
+
+targets <- data.frame(samplename=samplenames.v,
+  filename=filenames.v,
+  condition=conditions.v,
+  paired=paired.v,
+  stranded=stranded.v)
+  
+targets <- t(na.omit(t(targets)))
+
+write.table(targets,file=file.path(opt$path,"targets.txt"),sep="\t",row.names=FALSE,quote=FALSE)
+
 
 # Check if version is numeric or "auto"
 if (opt$version!="auto"){
@@ -794,12 +858,6 @@ if (opt$qcplots == "NULL"){
 # Figure Formats -> VECTOR
 figform.v <- unlist(strsplit(opt$figformat, split=","))
 
-# Outdir
-#if  (!is.empty(opt$xprtwhere)){
-	path <- unlist(strsplit(opt$xprtwhere, split="/"))
-	xprtwhere <- file.path(path)
-#}
-
 # Create "export" VECTORS...
 xprtwhat.v <- unlist(strsplit(opt$xprtwhat, split=","))
 xprtscale.v <- unlist(strsplit(opt$xprtscale, split=","))
@@ -813,10 +871,10 @@ opt$templatereport <- "default"
 if (!(opt$org %in% c("hg18", "hg19", "hg38", "mm9","mm10", "rn5", "rn6", "dm3", "dm6", "danrer7","pantro4", "susscr3", "tair10", "equcab2" )))
 	stop("The organism must be one of \"hg18\", \"hg19\", \"hg38\", \"mm9\",\"mm10\", \"rn5\", \"rn6\", \"dm3\", \"dm6\", \"danrer7\",\"pantro4\", \"susscr3\", \"tair10\", \"equcab2\"!")
 
-
 metaseqr2(
 #    counts=opt$counts,
-    sampleList=opt$samplelist,
+#    sampleList=opt$samplelist,
+	sampleList=file.path(opt$path,"targets.txt"),
     excludeList=opt$excludelist,
     path=opt$path,
     fileType=opt$filetype,

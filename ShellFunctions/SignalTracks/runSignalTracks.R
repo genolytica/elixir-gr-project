@@ -146,6 +146,13 @@ option_list <- list(
 )
 
 opt <- parse_args(OptionParser(option_list=option_list))
+#print(opt$path)
+#print(file.path(getwd(),opt$path))
+#print(dirname(opt$targets))
+#print(opt$path)
+#print(list.files(opt$path))
+#print(list.files(dirname(opt$targets)))
+#targets <- readTargets(opt$targets, path=opt$path)
 
 #Create targets file
 samplenames.v <- unlist(strsplit(opt$samples, split=","))
@@ -168,6 +175,7 @@ targets <- data.frame(samplename=samplenames.v,
 targets <- t(na.omit(t(targets)))
 
 write.table(targets,file=file.path(opt$path,"targets.txt"),sep="\t",row.names=FALSE,quote=FALSE)
+#write.table(targets,file="targetsT.txt",sep="\t",row.names=FALSE,quote=FALSE)
 
 # TODO: more checks
 if (!(opt$org %in% c("hg18", "hg19", "hg38", "mm9","mm10", "rn5", "rn6", "dm3", "dm6", "danrer7","pantro4", "susscr3", "tair10", "equcab2" )))
