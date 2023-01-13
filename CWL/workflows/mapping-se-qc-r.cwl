@@ -41,7 +41,7 @@ inputs:
     type: int?
   cores_qc:
     type: int?
-  cores_metaseqr2
+  cores_metaseqr2:
     type: float?
 	
   # HISAT2 alignment
