@@ -41,9 +41,8 @@ inputs:
     type: int?
   cores_qc:
     type: int?
-  cores_metaseqr2
+  cores_metaseqr2:
     type: float?
-	
   # HISAT2 alignment
   add_chr:
     type: boolean?
@@ -91,7 +90,7 @@ inputs:
     type: boolean?
   sorted_bam:
     type: string[] 
-	
+
   # MetaseqR2 arguments
   samples:
     type: string
@@ -146,7 +145,7 @@ inputs:
   refdb:
     type: string?
   version:
-    type: dtring?
+    type: string?
   translevel:
     type: string?
   counttype:
@@ -159,7 +158,7 @@ inputs:
     type: int?
   exonfltr:
     type: boolean?  
-  exonfltr_exonsprgene
+  exonfltr_exonsprgene:
     type: int?
   exonfltr_minexons:
     type: int?
@@ -227,7 +226,7 @@ inputs:
     type: string?
   xprtscale:
     type: string?
-  xprtvalues"
+  xprtvalues:
     type: string?
   xprtstats:
     type: string?
@@ -492,5 +491,5 @@ $namespaces:
   edam: http://edamontology.org/
 
 $schemas:
- - https://schema.org/version/latest/schema.rdf
+ - https://schema.org/version/latest/schemaorg-current-https.rdf
  - http://edamontology.org/EDAM_1.18.owl
